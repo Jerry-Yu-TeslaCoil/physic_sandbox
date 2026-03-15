@@ -30,6 +30,14 @@ public class MathUtil {
         return new Vector2(x, y);
     }
 
+    public static double distance(Vector2 v1, Vector2 v2) {
+        double dx = v1.x() - v2.x();
+        double dy = v1.y() - v2.y();
+        double distanceSquared = dx * dx + dy * dy;
+
+        return distanceSquared * invSqrt(distanceSquared);
+    }
+
     public static double invSqrt(double x) {
         double xHalf = 0.5 * x;
         long i = Double.doubleToLongBits(x);
