@@ -15,30 +15,29 @@ public class ConstraintValidationTest {
     private final double bMass = 2;
     private final double cMass = Double.POSITIVE_INFINITY;
 
+    private final double spf = 1.0 / 60;
+
     /**
      * 测试约束计算的原理可行性。
      * <p>
-     * 场景设定：C是运动学的，与静止物体B用一个刚性定长连杆连接；同时运动中的A与B即将相撞。求解这一帧后A与B物体的状态。
+     * 场景设定：C是运动学的，与静止物体B用一个刚性定长连杆连接。B受到重力作用即将下坠。
      * <p>
      * 数据设定：C在(0, 0)处，运动学性质；
      * B在(-1, 0)处，质量为2且静止；
-     * A在(-2, -1)处，质量为1且速度为(1, 1)。
      * 帧长为2秒。
-     * A，B应满足的约束：
-     * A与B的动量守恒，能量守恒。
-     * 在1秒时A与B发生了碰撞，然后依次修改A，B位置并迭代多次。
-     * 用弹簧来粗略实现上述约束。
+     * 用冲量修正实现上述约束。
      */
     @Test
-    public void testConstraintValidation() {
+    public void testConnectionConstraint() {
         //时间线
-        for (double t = 0; t <= 2; t += 1.0 / 60) {
+        for (double t = 0; t <= 2; t += spf) {
+            //重力应用
+            Vector2 gravity = new Vector2(0, 9.8);
+            Vector2 deltaY = MathUtil.mul(gravity, spf);
+            bSpeed = MathUtil.add(bSpeed, deltaY);
             //碰撞约束计算
-            Vector2 aTarget = MathUtil.add(aPos, aSpeed);
             Vector2 bTarget = MathUtil.add(bPos, bSpeed);
-            if (MathUtil.distance(aTarget, bTarget) < 1) {
-                //TODO: 完成机制验证
-            }
+            Vector2 b2c = MathUtil.add(cPos, MathUtil.negativeOf(bTarget));
         }
     }
 }
