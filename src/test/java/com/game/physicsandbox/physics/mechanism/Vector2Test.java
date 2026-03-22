@@ -587,6 +587,16 @@ public class Vector2Test {
         log.info("========== 性能测试完成 ==========\n");
     }
 
+    @Test
+    public void simpleTestProjectionOnto() {
+        for (int i = 0; i < 10000; i++) {
+            Vector2 v = randomVector();
+            double factor = rand.nextDouble();
+            assertEquals(v.projectionOnto(Vector2.unitX().mul(factor)).length(), Math.abs(v.x()), delta);
+            assertEquals(v.projectionOnto(Vector2.unitY().mul(factor)).length(), Math.abs(v.y()), delta);
+        }
+    }
+
     /**
      * 生成随机向量
      * <p>

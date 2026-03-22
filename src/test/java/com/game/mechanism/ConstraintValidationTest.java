@@ -1,9 +1,10 @@
 package com.game.mechanism;
 
 import com.game.physicsandbox.physics.mechanism.Vector2;
-import com.game.physicsandbox.physics.util.MathUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+@Slf4j
 public class ConstraintValidationTest {
     private Vector2 aPos = new Vector2(-2, -1);
     private Vector2 bPos = new Vector2(-1, 0);
@@ -33,11 +34,11 @@ public class ConstraintValidationTest {
         for (double t = 0; t <= 2; t += spf) {
             //重力应用
             Vector2 gravity = new Vector2(0, 9.8);
-            Vector2 deltaY = MathUtil.mul(gravity, spf);
-            bSpeed = MathUtil.add(bSpeed, deltaY);
+            Vector2 deltaY = gravity.mul(spf);
+            bSpeed = bSpeed.add(deltaY);
             //碰撞约束计算
-            Vector2 bTarget = MathUtil.add(bPos, bSpeed);
-            Vector2 b2c = MathUtil.add(cPos, MathUtil.negativeOf(bTarget));
+            Vector2 bTarget = bPos.add(bSpeed);
+            Vector2 b2c = cPos.sub(bTarget);
         }
     }
 }

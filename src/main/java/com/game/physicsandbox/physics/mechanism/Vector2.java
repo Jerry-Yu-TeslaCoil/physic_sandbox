@@ -182,7 +182,7 @@ public record Vector2(double x, double y) {
      * @return 如果向量长度平方小于1e-12返回true，否则返回false
      */
     public boolean isZero() {
-        return lengthSquared() < 1e-12;
+        return lengthSquared() < ZERO_DELTA;
     }
 
     /**
@@ -220,5 +220,20 @@ public record Vector2(double x, double y) {
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    /**
+     * 计算当前向量在另一个向量方向上的投影向量
+     * @param v 目标方向向量
+     * @return 投影向量
+     */
+    public Vector2 projectionOnto(Vector2 v) {
+        double dotProduct = this.x * v.x + this.y * v.y;
+        double otherLengthSquared = v.x * v.x + v.y * v.y;
+        if (v.isZero()) {
+            return new Vector2(0, 0);
+        }
+        double scalar = dotProduct / otherLengthSquared;
+        return new Vector2(scalar * v.x, scalar * v.y);
     }
 }
