@@ -22,6 +22,9 @@ public class ConstraintValidationTest {
     private final double ZERO_DELTA = 1e-2;
     private final Vector2 gravity = new Vector2(0, -9.8);
 
+    /**
+     * 单重力测试
+     */
     @Test
     public void testGravity() {
         boolean firstReached = false;
@@ -52,7 +55,7 @@ public class ConstraintValidationTest {
      * <p>
      * 数据设定：C在(0, 0)处，运动学性质；
      * B在(-1, 0)处，质量为2且静止；
-     * 帧长为2秒。
+     * 帧长为spf秒。
      * 用冲量修正实现上述约束。
      */
     @Test
@@ -113,6 +116,18 @@ public class ConstraintValidationTest {
         log.info("B第一次到达底端，时间为 {}", bReachedTime);
     }
 
+    /**
+     * 测试约束计算的原理可行性。
+     * <p>
+     * 场景设定：C是运动学的，与静止物体B用一个刚性定长连杆连接。B受到重力作用即将下坠。
+     * 同时A在B左侧，与B同样使用刚性连杆连接。
+     * <p>
+     * 数据设定：C在(0, 0)处，运动学性质；
+     * B在(-10, 0)处，质量为2且静止；
+     * A在(-20, 0)处，质量为1且静止；
+     * 帧长为spf秒。
+     * 用冲量修正实现上述约束。
+     */
     @Test
     public void testConnectionMultipleConstraint() {
         boolean aReached = false;
