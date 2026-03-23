@@ -72,6 +72,8 @@ public class ConstraintValidationTest {
             //log.info("当前帧重力影响: {}", gravityDiff);
             aSpeed = aSpeed.add(gravityDiff);
             bSpeed = bSpeed.add(gravityDiff);
+            aPos = aPos.add(aSpeed.mul(spf));
+            bPos = bPos.add(bSpeed.mul(spf));
             //碰撞约束计算
             Vector2 sumDiff = new Vector2(0, 0);
             for (int i = 0; i < 6; i++) {
@@ -87,8 +89,6 @@ public class ConstraintValidationTest {
                     bPos = bPos.add(posDiff);
                 }
             }
-            aPos = aPos.add(aSpeed.mul(spf));
-            bPos = bPos.add(bSpeed.mul(spf));
             //log.info("A的位置变化: {}", aPos.sub(aRec));
             //log.info("B的位置变化: {}", bPos.sub(bRec));
             //log.info("此帧总补偿向量: {}", sumDiff);
@@ -145,6 +145,8 @@ public class ConstraintValidationTest {
                     bSpeed = bSpeed.add(bElasticSpeed);
                     bPos = bPos.add(bElasticSpeed.mul(spf));
                 }
+                aPos = aPos.add(aSpeed.mul(spf));
+                bPos = bPos.add(bSpeed.mul(spf));
                 //AB连杆约束
                 //AB位置满足((aPos + delta) - (bPos - delta)).length = 10
                 //AB速度满足
@@ -165,8 +167,6 @@ public class ConstraintValidationTest {
                     bPos = bPos.add(bElasticSpeed.mul(spf));
                 }
             }
-            aPos = aPos.add(aSpeed.mul(spf));
-            bPos = bPos.add(bSpeed.mul(spf));
             //log.info("A的位置变化: {}", aPos.sub(aRec));
             //log.info("B的位置变化: {}", bPos.sub(bRec));
             //log.info("此帧总补偿向量: {}", sumDiff);
