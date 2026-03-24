@@ -1,6 +1,4 @@
-package com.game.physicsandbox.physics.mechanism;
-
-import com.game.physicsandbox.physics.util.MathUtil;
+package com.game.physicsandbox.physics.util;
 
 /**
  * 二维向量记录类，提供基本的向量运算功能。

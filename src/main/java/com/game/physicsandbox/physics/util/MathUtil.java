@@ -1,7 +1,5 @@
 package com.game.physicsandbox.physics.util;
 
-import com.game.physicsandbox.physics.mechanism.Vector2;
-
 public class MathUtil {
 
     public static Vector2 negativeOf(Vector2 v) {
