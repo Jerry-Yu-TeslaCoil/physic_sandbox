@@ -1,16 +1,17 @@
 package com.game.physicsandbox.physics.event;
 
+import com.game.physicsandbox.physics.object.Component;
+
 /**
  * 事件监听器接口
  *
  * @param <T> 监听的事件类型
  */
-@FunctionalInterface
-public interface EventListener<T extends Event> {
+public abstract class EventListener<T extends Event> extends Component {
     /**
      * 事件处理回调
      *
      * @param event 事件对象
      */
-    void onEvent(T event);
+    public abstract void onEvent(T event);
 }

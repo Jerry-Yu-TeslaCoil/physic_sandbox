@@ -4,7 +4,7 @@ import com.game.physicsandbox.physics.event.EventBus;
 import org.junit.jupiter.api.Test;
 
 public class EventBusTest {
-    private EventBus eventBus;
+    private final EventBus eventBus;
 
     public EventBusTest() {
         eventBus = new EventBus();
@@ -13,13 +13,13 @@ public class EventBusTest {
     @Test
     public void test() {
         TestListener listener = new TestListener();
-        eventBus.registerListener(listener);
+        eventBus.register(listener);
 
         eventBus.publish(new TestEvent("Test Event Published"));
 
         eventBus.dispatchEvents(System.currentTimeMillis());
 
-        eventBus.unregisterListener(listener);
+        eventBus.unregister(listener);
 
         eventBus.dispatchEvents(System.currentTimeMillis());
     }

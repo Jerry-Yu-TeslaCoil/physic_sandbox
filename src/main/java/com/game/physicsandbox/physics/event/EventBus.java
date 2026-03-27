@@ -1,6 +1,7 @@
 package com.game.physicsandbox.physics.event;
 
 import com.game.physicsandbox.exception.EventTypeException;
+import com.game.physicsandbox.physics.mechanism.ComponentExecutor;
 import com.game.physicsandbox.physics.object.Component;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 每个监听器只监听一种事件类型
  */
 @Slf4j
-public class EventBus {
+@org.springframework.stereotype.Component
+public class EventBus implements ComponentExecutor {
 
     // 事件类型到监听器列表的映射
     private final Map<Class<? extends Event>, List<EventListener<?>>> listenerMap = new ConcurrentHashMap<>();
@@ -22,29 +24,8 @@ public class EventBus {
     // 事件存储队列，按时间戳排序
     private final List<Event> eventQueue = new ArrayList<>();
 
-    /**
-     * 注册监听器
-     * @param listener 事件监听器
-     * @param <T> 事件类型
-     */
-    public <T extends Event> void registerListener(EventListener<T> listener) {
-        Class<T> eventType = cast(listener);
-        listenerMap.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>())
-                .add(listener);
-    }
-
-    /**
-     * 注销监听器
-     * @param listener 要注销的事件监听器
-     * @param <T> 事件类型
-     */
-    public <T extends Event> void unregisterListener(EventListener<T> listener) {
-        Class<T> eventType = cast(listener);
-        List<EventListener<?>> listeners = listenerMap.get(eventType);
-        if (listeners != null) {
-            listeners.remove(listener);
-        }
-    }
+    // 组件存储队列，在此阶段更新
+    private final List<Component> components = new ArrayList<>();
 
     /**
      * 发布事件（自动添加当前时间戳）
@@ -93,9 +74,8 @@ public class EventBus {
             dispatchEvent(event);
         }
 
-        listenerMap.values().forEach((eventListeners) -> {
+        components.forEach((component) -> {
             try {
-               Component component = (Component) eventListeners;
                component.update(timestamp);
             } catch (Exception e) {
                 log.warn(e.getMessage());
@@ -150,10 +130,47 @@ public class EventBus {
         return listenerMap.getOrDefault(eventType, Collections.emptyList());
     }
 
+    @Override
+    public void register(Component component) {
+        if (!components.contains(component)) {
+            components.add(component);
+        }
+        if (component instanceof EventListener<? extends Event>) {
+            registerListener((EventListener<? extends Event>) component);
+        }
+    }
+
+    @Override
+    public void unregister(Component component) {
+        components.remove(component);
+
+        if (component instanceof EventListener<? extends Event>) {
+            unregisterListener((EventListener<? extends Event>) component);
+        }
+    }
+
+    private <T extends Event> void registerListener(EventListener<T> listener) {
+        Class<T> eventType = cast(listener);
+        listenerMap.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>())
+                .add(listener);
+    }
+
+    private <T extends Event> void unregisterListener(EventListener<T> listener) {
+        Class<T> eventType = cast(listener);
+        List<EventListener<?>> listeners = listenerMap.get(eventType);
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private <T extends Event> Class<T> cast(EventListener<T> listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("监听器不能为null");
+        }
         ListensTo listensTo = listener.getClass().getAnnotation(ListensTo.class);
         if (listensTo == null) {
-            throw new EventTypeException(listener.getClass() + " must have @ListensTo annotation");
+            throw new EventTypeException(listener.getClass() + "必须有注解@ListensTo指定监听器类型");
         }
         Class<? extends Event> value = listensTo.value();
         Class<T> eventType;
@@ -162,7 +179,7 @@ public class EventBus {
             return eventType;
         } catch (Exception e) {
             throw new EventTypeException(
-                    listener.getClass().getSimpleName() + " uses @ListensTo with invalid event type");
+                    listener.getClass().getSimpleName() + "@ListensTo指定类型与监听器类型不一致");
         }
     }
 }
