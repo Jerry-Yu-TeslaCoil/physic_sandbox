@@ -19,13 +19,12 @@ import java.util.Map;
  * @version 1.0
  */
 @Component
-public class InputMapper {
+public class EventMapper {
 
-    Map<MouseButton, Class<? extends ControlEvent>> mouseMapping = new HashMap<>();
-    Map<Class<? extends ControlEvent>, MouseButton> invertMouseMapping = new HashMap<>();
-
-    Map<KeyCode, Class<? extends ControlEvent>> keyMapping = new HashMap<>();
-    Map<Class<? extends ControlEvent>, KeyCode> invertKeyMapping = new HashMap<>();
+    private final Map<MouseButton, Class<? extends ControlEvent>> mouseMapping = new HashMap<>();
+    private final Map<Class<? extends ControlEvent>, MouseButton> invertMouseMapping = new HashMap<>();
+    private final Map<KeyCode, Class<? extends ControlEvent>> keyMapping = new HashMap<>();
+    private final Map<Class<? extends ControlEvent>, KeyCode> invertKeyMapping = new HashMap<>();
 
     /**
      * 设置鼠标按钮映射关系。新的关系会置空原先冲突的映射

@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class Controller {
+public class EventController {
 
     private final EventRegistry registry;
-    private final InputMapper inputMapper;
+    private final EventMapper eventMapper;
     private final EventBus eventBus;
 
     @Autowired
-    public Controller(EventRegistry registry, InputMapper inputMapper, EventBus eventBus) {
+    public EventController(EventRegistry registry, EventMapper eventMapper, EventBus eventBus) {
         this.registry = registry;
-        this.inputMapper = inputMapper;
+        this.eventMapper = eventMapper;
         this.eventBus = eventBus;
     }
 
@@ -35,7 +35,7 @@ public class Controller {
      * @param event 点击的具体事件
      */
     public void padClicked(MouseEvent event) {
-        Class<? extends ControlEvent> eventClass = inputMapper.getMappingEvent(event);
+        Class<? extends ControlEvent> eventClass = eventMapper.getMappingEvent(event);
         ControlEvent controlEvent = getControlEvent(eventClass);
         controlEvent.set(event);
         eventBus.publish(controlEvent);
@@ -46,7 +46,7 @@ public class Controller {
      * @param event 键盘事件
      */
     public void keyPressed(KeyEvent event) {
-        Class<? extends ControlEvent> eventClass = inputMapper.getMappingEvent(event);
+        Class<? extends ControlEvent> eventClass = eventMapper.getMappingEvent(event);
         ControlEvent controlEvent = getControlEvent(eventClass);
         controlEvent.set(event);
         eventBus.publish(controlEvent);
