@@ -1,9 +1,9 @@
 package com.game.physicsandbox.physics.frame;
 
-import com.game.physicsandbox.physics.event.EventBus;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,15 +17,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class FrameManager {
 
-    public static final long NANO_SECOND_PER_CALCULATE_FRAMES = (long)(1e9 / 480.0);
+    @Value("${settings.physics.calculate_frames_per_second}")
+    private int calculateFramesPerSecond;
 
     private volatile boolean running = true;
 
-    private final EventBus eventBus;
+    private CalculateFrame calculateFrame;
+
 
     @Autowired
-    public FrameManager(EventBus eventBus) {
-        this.eventBus = eventBus;
+    public FrameManager(CalculateFrame calculateFrame) {
+        this.calculateFrame = calculateFrame;
     }
 
     public void run() {
@@ -41,6 +43,7 @@ public class FrameManager {
                 continue;
             }
 
+            long NANO_SECOND_PER_CALCULATE_FRAMES = (long) (1e9 / calculateFramesPerSecond);
             long firstCalculateFrames = lastNanoTime % NANO_SECOND_PER_CALCULATE_FRAMES;
             for (long i = 0, t = lastNanoTime + (NANO_SECOND_PER_CALCULATE_FRAMES - firstCalculateFrames);
                  t <= currentNanoTime;
@@ -49,6 +52,7 @@ public class FrameManager {
                 log.info("Calculate frame time: from {} to {}", t - NANO_SECOND_PER_CALCULATE_FRAMES, t);
                 log.info("Fixed time gap: {}ns", t - lastCalculateFrameTime);
                 log.info("Set fixed time gap: {}ns", NANO_SECOND_PER_CALCULATE_FRAMES);
+                calculateFrame.update(t);
 
                 lastCalculateFrameTime = t;
             }

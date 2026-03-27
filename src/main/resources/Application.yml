@@ -1,0 +1,3 @@
+settings:
+  physics:
+    calculate_frames_per_second: 480
