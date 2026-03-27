@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.mechanism;
+package com.game.physicsandbox.physics.frame;
 
 public class CalculateFrame {
     private CalculateFrame() {

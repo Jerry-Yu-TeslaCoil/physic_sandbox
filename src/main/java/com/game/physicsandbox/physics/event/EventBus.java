@@ -1,5 +1,7 @@
 package com.game.physicsandbox.physics.event;
 
+import com.game.physicsandbox.exception.EventTypeException;
+import com.game.physicsandbox.physics.object.Component;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -22,34 +24,24 @@ public class EventBus {
 
     /**
      * 注册监听器
-     * @param eventType 要监听的事件类型
      * @param listener 事件监听器
      * @param <T> 事件类型
      */
-    public <T extends Event> void registerListener(Class<T> eventType, EventListener<T> listener) {
+    public <T extends Event> void registerListener(EventListener<T> listener) {
+        Class<T> eventType = cast(listener);
         listenerMap.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>())
                 .add(listener);
     }
 
     /**
      * 注销监听器
-     * @param eventType 事件类型
      * @param listener 要注销的事件监听器
      * @param <T> 事件类型
      */
-    public <T extends Event> void unregisterListener(Class<T> eventType, EventListener<T> listener) {
+    public <T extends Event> void unregisterListener(EventListener<T> listener) {
+        Class<T> eventType = cast(listener);
         List<EventListener<?>> listeners = listenerMap.get(eventType);
         if (listeners != null) {
-            listeners.remove(listener);
-        }
-    }
-
-    /**
-     * 注销监听器（从所有事件类型中移除）
-     * @param listener 要注销的事件监听器
-     */
-    public void unregisterListener(EventListener<?> listener) {
-        for (List<EventListener<?>> listeners : listenerMap.values()) {
             listeners.remove(listener);
         }
     }
@@ -100,6 +92,15 @@ public class EventBus {
         for (Event event : eventsToDispatch) {
             dispatchEvent(event);
         }
+
+        listenerMap.values().forEach((eventListeners) -> {
+            try {
+               Component component = (Component) eventListeners;
+               component.update(timestamp);
+            } catch (Exception e) {
+                log.warn(e.getMessage());
+            }
+        });
     }
 
     /**
@@ -149,16 +150,19 @@ public class EventBus {
         return listenerMap.getOrDefault(eventType, Collections.emptyList());
     }
 
-    /**
-     * 事件监听器接口
-     * @param <T> 监听的事件类型
-     */
-    @FunctionalInterface
-    public interface EventListener<T extends Event> {
-        /**
-         * 事件处理回调
-         * @param event 事件对象
-         */
-        void onEvent(T event);
+    private <T extends Event> Class<T> cast(EventListener<T> listener) {
+        ListensTo listensTo = listener.getClass().getAnnotation(ListensTo.class);
+        if (listensTo == null) {
+            throw new EventTypeException(listener.getClass() + " must have @ListensTo annotation");
+        }
+        Class<? extends Event> value = listensTo.value();
+        Class<T> eventType;
+        try {
+            eventType = (Class<T>) value;
+            return eventType;
+        } catch (Exception e) {
+            throw new EventTypeException(
+                    listener.getClass().getSimpleName() + " uses @ListensTo with invalid event type");
+        }
     }
 }

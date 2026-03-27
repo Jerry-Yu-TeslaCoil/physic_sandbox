@@ -1,9 +1,7 @@
-package com.game.physicsandbox.physics.mechanism;
+package com.game.physicsandbox.physics.frame;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Random;
 
 /**
  * 帧调度管理器，负责计算帧和渲染帧的协同、帧长计算以实现定长更新，以及调用各执行器

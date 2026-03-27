@@ -13,13 +13,13 @@ public class EventBusTest {
     @Test
     public void test() {
         TestListener listener = new TestListener();
-        eventBus.registerListener(TestEvent.class, listener);
+        eventBus.registerListener(listener);
 
         eventBus.publish(new TestEvent("Test Event Published"));
 
         eventBus.dispatchEvents(System.currentTimeMillis());
 
-        eventBus.unregisterListener(TestEvent.class, listener);
+        eventBus.unregisterListener(listener);
 
         eventBus.dispatchEvents(System.currentTimeMillis());
     }

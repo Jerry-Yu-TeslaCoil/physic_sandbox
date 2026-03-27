@@ -1,12 +1,12 @@
-package com.game.physicsandbox.physics.frame;
+package com.game.physicsandbox.physics.event;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface UpdateLayer {
-    UpdateStage value() default UpdateStage.PHYSICS;
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ListensTo {
+    Class<? extends Event> value();
 }
