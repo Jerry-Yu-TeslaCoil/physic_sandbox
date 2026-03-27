@@ -1,6 +1,7 @@
 package com.game.physicsandbox.physics.event;
 
 import com.game.physicsandbox.exception.EventNotRegisteredException;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -17,6 +18,7 @@ import java.util.function.Supplier;
  * @author Jerry-Yu-TeslaCoil
  * @version 1.0
  */
+@Component
 public class EventRegistry {
     private final Map<Class<? extends Event>, EventPool<? extends Event>> eventPool = new ConcurrentHashMap<>();
 
@@ -55,7 +57,7 @@ public class EventRegistry {
      * @param <T> Event子类泛型
      */
     @SuppressWarnings("unchecked")
-    public <T extends Event> T get(Class<T> eventClass) {
+    public <T extends Event> T get(Class<T> eventClass) throws EventNotRegisteredException {
         if (!eventPool.containsKey(eventClass)) {
             throw new EventNotRegisteredException("尝试获得未注册的事件类型: " + eventClass);
         }
@@ -66,7 +68,7 @@ public class EventRegistry {
      * 回收Event对象到对象池。
      * @param event 要回收的事件对象
      */
-    public void recycle(Event event) {
+    public void recycle(Event event) throws EventNotRegisteredException {
         if (!eventPool.containsKey(event.getClass())) {
             throw new EventNotRegisteredException("尝试回收未注册的事件类型: " + event.getClass());
         }
