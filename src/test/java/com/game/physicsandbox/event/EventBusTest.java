@@ -1,7 +1,7 @@
 package com.game.physicsandbox.event;
 
 import com.game.physicsandbox.physics.event.EventBus;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class EventBusTest {
     private final EventBus eventBus;

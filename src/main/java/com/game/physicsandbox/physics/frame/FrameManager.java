@@ -1,7 +1,9 @@
 package com.game.physicsandbox.physics.frame;
 
+import com.game.physicsandbox.physics.event.EventBus;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,13 +15,19 @@ import org.springframework.stereotype.Component;
 @Setter
 @Slf4j
 @Component
-public class FrameManager implements Runnable {
+public class FrameManager {
 
     public static final long NANO_SECOND_PER_CALCULATE_FRAMES = (long)(1e9 / 480.0);
 
     private volatile boolean running = true;
 
-    @Override
+    private final EventBus eventBus;
+
+    @Autowired
+    public FrameManager(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
     public void run() {
         long lastCalculateFrameTime = 0;
         long currentNanoTime;
@@ -45,6 +53,11 @@ public class FrameManager implements Runnable {
                 lastCalculateFrameTime = t;
             }
 
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             log.info("Render frame time: {}ns", currentNanoTime);
 
             lastNanoTime = currentNanoTime;

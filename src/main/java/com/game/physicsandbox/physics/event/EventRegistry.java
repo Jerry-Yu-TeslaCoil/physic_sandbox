@@ -22,9 +22,6 @@ import java.util.function.Supplier;
 public class EventRegistry {
     private final Map<Class<? extends Event>, EventPool<? extends Event>> eventPool = new ConcurrentHashMap<>();
 
-    public EventRegistry() {
-    }
-
     /**
      * 注册一个事件类型并提供创建方法，供对象池管理。
      * 同一种事件只能注册一次。再次注册会直接返回。

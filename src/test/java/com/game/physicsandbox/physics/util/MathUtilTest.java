@@ -1,11 +1,11 @@
 package com.game.physicsandbox.physics.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class MathUtilTest {
@@ -36,8 +36,11 @@ public class MathUtilTest {
             Vector2 result = MathUtil.negativeOf(v);
 
             // 验证负向量的每个分量应该是原向量的相反数
-            assertTrue(doubleEquals(result.x(), -v.x()),
-                    String.format("negative 方法失败: v=(%.6f, %.6f), result=(%.6f, %.6f)", v.x(), v.y(), result.x(), result.y()));
+            Assert.assertTrue(
+                    String.format("negative 方法失败: v=(%.6f, %.6f), result=(%.6f, %.6f)",
+                            v.x(), v.y(), result.x(), result.y()),
+                    doubleEquals(result.x(), -v.x())
+                    );
 
             log.debug(formatVector("v=({}, {}) -> negative=({}, {})",
                     v.x(), v.y(), result.x(), result.y()));
@@ -52,9 +55,10 @@ public class MathUtilTest {
             Vector2 result = MathUtil.add(v1, v2);
 
             // 验证向量加法：每个分量应该相加
-            assertTrue(doubleEquals(result.x(), v1.x() + v2.x()) && doubleEquals(result.y(), v1.y() + v2.y()),
+            Assert.assertTrue(
                     String.format("add 方法失败: v1=(%.6f, %.6f), v2=(%.6f, %.6f), result=(%.6f, %.6f)",
-                            v1.x(), v1.y(), v2.x(), v2.y(), result.x(), result.y()));
+                            v1.x(), v1.y(), v2.x(), v2.y(), result.x(), result.y()),
+                    doubleEquals(result.x(), v1.x() + v2.x()) && doubleEquals(result.y(), v1.y() + v2.y()));
 
             log.debug(formatVector("({}, {}) + ({}, {}) = ({}, {})",
                     v1.x(), v1.y(), v2.x(), v2.y(), result.x(), result.y()));
@@ -70,9 +74,10 @@ public class MathUtilTest {
                 Vector2 result = MathUtil.mul(v, multiplier);
 
                 // 验证标量乘法：每个分量应该乘以标量
-                assertTrue(doubleEquals(result.x(), v.x() * multiplier) && doubleEquals(result.y(), v.y() * multiplier),
+                Assert.assertTrue(
                         String.format("mul 方法失败: v=(%.6f, %.6f), multiplier=%.2f, result=(%.6f, %.6f)",
-                                v.x(), v.y(), multiplier, result.x(), result.y()));
+                                v.x(), v.y(), multiplier, result.x(), result.y()),
+                        doubleEquals(result.x(), v.x() * multiplier) && doubleEquals(result.y(), v.y() * multiplier));
 
                 log.debug(formatVector("({}, {}) * {:.1f} = ({}, {})",
                         v.x(), v.y(), multiplier, result.x(), result.y()));
@@ -88,8 +93,8 @@ public class MathUtilTest {
         try {
             Vector2 result = MathUtil.normalize(zeroVector);
             // 如果方法没有抛出异常，验证结果
-            assertTrue(doubleEquals(result.x(), 0) && doubleEquals(result.y(), 0),
-                    "normalize 方法对零向量处理失败");
+            Assert.assertTrue("normalize 方法对零向量处理失败",
+                    doubleEquals(result.x(), 0) && doubleEquals(result.y(), 0));
             log.info(formatVector("零向量归一化结果: ({}, {})", result.x(), result.y()));
         } catch (Exception e) {
             log.info("零向量归一化抛出异常: {}", e.getMessage());
@@ -108,15 +113,17 @@ public class MathUtilTest {
 
             // 验证归一化后的向量长度应该为1
             double length = Math.sqrt(result.x() * result.x() + result.y() * result.y());
-            assertTrue(doubleEquals(length, 1.0),
-                    String.format("normalize 方法失败: v=(%.6f, %.6f), 归一化后长度=%.6f, 应为1.0", v.x(), v.y(), length));
+            Assert.assertTrue(
+                    String.format("normalize 方法失败: v=(%.6f, %.6f), 归一化后长度=%.6f, 应为1.0", v.x(), v.y(), length),
+                    doubleEquals(length, 1.0));
 
             // 验证方向应该相同（对于非零向量）
             if (!doubleEquals(v.x(), 0) && !doubleEquals(v.y(), 0)) {
                 double originalAngle = Math.atan2(v.y(), v.x());
                 double resultAngle = Math.atan2(result.y(), result.x());
-                assertTrue(doubleEquals(originalAngle, resultAngle),
-                        String.format("normalize 方法改变了方向: 原角度=%.6f, 新角度=%.6f", originalAngle, resultAngle));
+                Assert.assertTrue(
+                        String.format("normalize 方法改变了方向: 原角度=%.6f, 新角度=%.6f", originalAngle, resultAngle),
+                        doubleEquals(originalAngle, resultAngle));
             }
 
             log.debug(formatVector("({}, {}) 归一化 = ({}, {}), 长度={:.2f}",

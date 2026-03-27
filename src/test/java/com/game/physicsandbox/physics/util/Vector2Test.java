@@ -1,11 +1,12 @@
 package com.game.physicsandbox.physics.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+
 
 /**
  * Vector2类的单元测试
@@ -26,6 +27,7 @@ public class Vector2Test {
     private final double scale = 1000.0;
     private final int total = 1000000;
     private final double delta = 1e-2;
+
     /**
      * 测试向量的基本运算：加法、减法、标量乘法、分量乘法、取负
      * <p>
@@ -47,10 +49,8 @@ public class Vector2Test {
             Vector2 v = randomVector();
             Vector2 result = v.negate();
 
-            assertEquals(-v.x(), result.x(), delta,
-                    String.format("negate x失败: v.x=%.6f, result.x=%.6f", v.x(), result.x()));
-            assertEquals(-v.y(), result.y(), delta,
-                    String.format("negate y失败: v.y=%.6f, result.y=%.6f", v.y(), result.y()));
+            assertEquals(-v.x(), result.x(), delta);
+            assertEquals(-v.y(), result.y(), delta);
 
             // 验证取负两次等于原向量
             Vector2 doubleNegate = result.negate();
@@ -143,21 +143,21 @@ public class Vector2Test {
      * - 归一化后方向与原向量相同
      * - 零向量归一化抛出异常
      */
-    @Test
-    public void testNormalize() {
-        log.info("========== 开始向量归一化测试 ==========");
-        int testCount = 10000;
-
-        // 测试零向量
-        log.info("【测试零向量归一化】");
+    @Test(expected = ArithmeticException.class)
+    public void testNormalizeZeroVector() {
+        log.info("========== 开始向量归一化测试（零向量） ==========");
         Vector2 zero = Vector2.zero();
-        assertThrows(ArithmeticException.class, zero::normalize,
-                "零向量归一化应该抛出 ArithmeticException");
+        zero.normalize();
+        // 应该抛出异常
         log.info("零向量归一化正确抛出异常\n");
+    }
 
-        // 测试非零向量
+    @Test
+    public void testNormalizeNonZero() {
         log.info("【测试非零向量归一化】");
+        int testCount = 10000;
         int validCount = 0;
+
         for (int i = 0; i < testCount; i++) {
             Vector2 v = randomVector();
             // 跳过零向量
@@ -170,16 +170,13 @@ public class Vector2Test {
 
             // 验证长度接近1
             double length = normalized.length();
-            assertEquals(1.0, length, delta,
-                    String.format("归一化后长度应为1，实际为%.6f，原向量=(%.6f, %.6f)",
-                            length, v.x(), v.y()));
+            assertEquals(1.0, length, delta);
 
             // 验证方向相同（通过点积验证）
             double dotProduct = v.dot(normalized);
             double originalLength = v.length();
             // v·(v/|v|) = |v|
-            assertEquals(originalLength, dotProduct, delta,
-                    String.format("方向改变: 原向量长度=%.6f, 点积=%.6f", originalLength, dotProduct));
+            assertEquals(originalLength, dotProduct, delta);
 
             // 验证归一化后的向量长度为1
             assertEquals(1.0, normalized.lengthSquared(), delta);
@@ -220,9 +217,7 @@ public class Vector2Test {
             double expectedDistance = Math.sqrt(Math.pow(v1.x() - v2.x(), 2) +
                     Math.pow(v1.y() - v2.y(), 2));
 
-            assertEquals(expectedDistance, distance, delta,
-                    String.format("距离计算错误: v1=%s, v2=%s, 期望=%.6f, 实际=%.6f",
-                            v1, v2, expectedDistance, distance));
+            assertEquals(expectedDistance, distance, delta);
 
             // 验证对称性
             double distance2 = v2.distanceBetween(v1);
@@ -251,8 +246,7 @@ public class Vector2Test {
             double d13 = v1.distanceBetween(v3);
 
             // 三角形不等式: d13 <= d12 + d23
-            assertTrue(d13 <= d12 + d23 + delta,
-                    String.format("三角形不等式不成立: d13=%.6f, d12+d23=%.6f", d13, d12 + d23));
+            assertTrue(d13 <= d12 + d23 + delta);
         }
         log.info("三角形不等式验证通过\n");
 
@@ -278,8 +272,7 @@ public class Vector2Test {
             Vector2 v = randomVector();
             double length = v.length();
             double expectedLength = Math.sqrt(v.x() * v.x() + v.y() * v.y());
-            assertEquals(expectedLength, length, delta,
-                    String.format("长度计算错误: v=%s, 期望=%.6f, 实际=%.6f", v, expectedLength, length));
+            assertEquals(expectedLength, length, delta);
         }
         log.info("长度计算测试通过\n");
     }
@@ -296,9 +289,7 @@ public class Vector2Test {
             double lengthSquared = v.lengthSquared();
             double expectedLengthSquared = v.x() * v.x() + v.y() * v.y();
 
-            assertEquals(expectedLengthSquared, lengthSquared, delta,
-                    String.format("长度平方计算错误: v=%s, 期望=%.6f, 实际=%.6f",
-                            v, expectedLengthSquared, lengthSquared));
+            assertEquals(expectedLengthSquared, lengthSquared, delta);
         }
         log.info("长度平方计算测试通过\n");
     }
@@ -327,9 +318,7 @@ public class Vector2Test {
             double dot = v1.dot(v2);
             double expectedDot = v1.x() * v2.x() + v1.y() * v2.y();
 
-            assertEquals(expectedDot, dot, delta,
-                    String.format("点积计算错误: v1=%s, v2=%s, 期望=%.6f, 实际=%.6f",
-                            v1, v2, expectedDot, dot));
+            assertEquals(expectedDot, dot, delta);
 
             // 验证交换律
             double dot2 = v2.dot(v1);
@@ -346,9 +335,7 @@ public class Vector2Test {
             double cross = v1.cross(v2);
             double expectedCross = v1.x() * v2.y() - v1.y() * v2.x();
 
-            assertEquals(expectedCross, cross, delta,
-                    String.format("叉积计算错误: v1=%s, v2=%s, 期望=%.6f, 实际=%.6f",
-                            v1, v2, expectedCross, cross));
+            assertEquals(expectedCross, cross, delta);
 
             // 验证反交换律: cross(v1, v2) = -cross(v2, v1)
             double cross2 = v2.cross(v1);
@@ -363,9 +350,7 @@ public class Vector2Test {
             // 创建一个垂直向量
             Vector2 perpendicular = new Vector2(-v.y(), v.x());
             double dot = v.dot(perpendicular);
-            assertEquals(0.0, dot, delta,
-                    String.format("垂直向量点积应为0: v=%s, perpendicular=%s, dot=%.6f",
-                            v, perpendicular, dot));
+            assertEquals(0.0, dot, delta);
         }
         log.info("垂直向量点积测试通过\n");
 
@@ -376,9 +361,7 @@ public class Vector2Test {
             double scalar = rand.nextDouble() * 10 - 5;
             Vector2 parallel = v.mul(scalar);
             double cross = v.cross(parallel);
-            assertEquals(0.0, cross, delta,
-                    String.format("平行向量叉积应为0: v=%s, parallel=%s, cross=%.6f",
-                            v, parallel, cross));
+            assertEquals(0.0, cross, delta);
         }
         log.info("平行向量叉积测试通过\n");
 
@@ -399,17 +382,17 @@ public class Vector2Test {
 
         // 测试精确零向量
         Vector2 zero = Vector2.zero();
-        assertTrue(zero.isZero(), "零向量的isZero()应返回true");
+        assertTrue(zero.isZero());
         log.info("精确零向量判断正确");
 
         // 测试接近零的向量
         Vector2 nearZero = new Vector2(1e-13, 1e-13);
-        assertTrue(nearZero.isZero(), "接近零的向量应被判断为零向量");
+        assertTrue(nearZero.isZero());
         log.info("接近零向量判断正确");
 
         // 测试非零向量
         Vector2 nonZero = new Vector2(1.0, 2.0);
-        assertFalse(nonZero.isZero(), "非零向量的isZero()应返回false");
+        assertFalse(nonZero.isZero());
         log.info("非零向量判断正确");
 
         log.info("========== 零向量判断测试完成 ==========\n");
@@ -464,10 +447,10 @@ public class Vector2Test {
 
         Vector2 v = new Vector2(3.5, -2.8);
         String str = v.toString();
-        assertTrue(str.contains("3.5"), "toString应包含x坐标");
-        assertTrue(str.contains("-2.8"), "toString应包含y坐标");
-        assertTrue(str.startsWith("("), "toString应以 '(' 开头");
-        assertTrue(str.endsWith(")"), "toString应以 ')' 结尾");
+        assertTrue(str.contains("3.5"));
+        assertTrue(str.contains("-2.8"));
+        assertTrue(str.startsWith("("));
+        assertTrue(str.endsWith(")"));
         log.info("toString() 输出正确: {}", str);
 
         log.info("========== toString测试完成 ==========\n");
@@ -592,8 +575,8 @@ public class Vector2Test {
         for (int i = 0; i < 10000; i++) {
             Vector2 v = randomVector();
             double factor = rand.nextDouble();
-            assertEquals(v.projectionOnto(Vector2.unitX().mul(factor)).length(), Math.abs(v.x()), delta);
-            assertEquals(v.projectionOnto(Vector2.unitY().mul(factor)).length(), Math.abs(v.y()), delta);
+            assertEquals(Math.abs(v.x()), v.projectionOnto(Vector2.unitX().mul(factor)).length(), delta);
+            assertEquals(Math.abs(v.y()), v.projectionOnto(Vector2.unitY().mul(factor)).length(), delta);
         }
     }
 
@@ -609,18 +592,5 @@ public class Vector2Test {
                 (rand.nextDouble() - 0.5) * scale,
                 (rand.nextDouble() - 0.5) * scale
         );
-    }
-
-    /**
-     * 比较两个双精度浮点数是否相等
-     * <p>
-     * 使用容差 delta 进行比较
-     *
-     * @param a 第一个数
-     * @param b 第二个数
-     * @return 如果差值小于delta则返回true
-     */
-    private static boolean doubleEquals(double a, double b, double delta) {
-        return Math.abs(a - b) < delta;
     }
 }

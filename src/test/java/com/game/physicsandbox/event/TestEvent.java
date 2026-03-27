@@ -10,4 +10,5 @@ import lombok.ToString;
 @ToString
 public class TestEvent extends Event {
     private String eventString;
+
 }

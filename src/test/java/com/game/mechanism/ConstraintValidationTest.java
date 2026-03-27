@@ -2,7 +2,7 @@ package com.game.mechanism;
 
 import com.game.physicsandbox.physics.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 @Slf4j
 public class ConstraintValidationTest {

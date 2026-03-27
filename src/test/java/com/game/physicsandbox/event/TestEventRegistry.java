@@ -4,8 +4,8 @@ import com.game.physicsandbox.exception.EventNotRegisteredException;
 import com.game.physicsandbox.physics.event.Event;
 import com.game.physicsandbox.physics.event.EventRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
 @Slf4j
 public class TestEventRegistry {
@@ -20,7 +20,7 @@ public class TestEventRegistry {
         registry.recycle(event);
         registry.get(TestEvent.class);
         log.info(event.toString());
-        Assertions.assertThrows(EventNotRegisteredException.class, () -> registry.get(Event.class));
-        Assertions.assertThrows(EventNotRegisteredException.class, () -> registry.recycle(new TestNotRegisteredEvent()));
+        Assert.assertThrows(EventNotRegisteredException.class, () -> registry.get(Event.class));
+        Assert.assertThrows(EventNotRegisteredException.class, () -> registry.recycle(new TestNotRegisteredEvent()));
     }
 }
