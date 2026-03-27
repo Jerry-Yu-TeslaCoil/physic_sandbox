@@ -1,6 +1,6 @@
 package com.game.physicsandbox.mechanism;
 
-import com.game.physicsandbox.physics.util.Vector2;
+import com.game.physicsandbox.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

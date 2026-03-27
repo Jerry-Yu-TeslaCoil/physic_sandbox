@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.util;
+package com.game.physicsandbox.util;
 
 public class MathUtil {
 

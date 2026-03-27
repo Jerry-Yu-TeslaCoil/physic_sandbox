@@ -1,9 +1,9 @@
-package com.game.physicsandbox.physics.control;
+package com.game.physicsandbox.control;
 
-import com.game.physicsandbox.physics.input.KeyCode;
-import com.game.physicsandbox.physics.input.KeyEvent;
-import com.game.physicsandbox.physics.input.MouseButton;
-import com.game.physicsandbox.physics.input.MouseEvent;
+import com.game.physicsandbox.input.KeyCode;
+import com.game.physicsandbox.input.KeyEvent;
+import com.game.physicsandbox.input.MouseButton;
+import com.game.physicsandbox.input.MouseEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

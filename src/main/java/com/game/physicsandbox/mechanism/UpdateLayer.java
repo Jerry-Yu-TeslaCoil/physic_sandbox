@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.frame;
+package com.game.physicsandbox.mechanism;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,8 +1,8 @@
-package com.game.physicsandbox.physics.event;
+package com.game.physicsandbox.event;
 
 import com.game.physicsandbox.exception.EventTypeException;
-import com.game.physicsandbox.physics.mechanism.ComponentExecutor;
-import com.game.physicsandbox.physics.object.Component;
+import com.game.physicsandbox.mechanism.ComponentExecutor;
+import com.game.physicsandbox.object.Component;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;

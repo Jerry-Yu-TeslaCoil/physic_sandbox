@@ -1,9 +1,9 @@
-package com.game.physicsandbox.physics.object.impl;
+package com.game.physicsandbox.object.impl;
 
-import com.game.physicsandbox.physics.frame.UpdateLayer;
-import com.game.physicsandbox.physics.frame.UpdateStage;
-import com.game.physicsandbox.physics.object.Component;
-import com.game.physicsandbox.physics.util.Vector2;
+import com.game.physicsandbox.mechanism.UpdateLayer;
+import com.game.physicsandbox.mechanism.UpdateStage;
+import com.game.physicsandbox.object.Component;
+import com.game.physicsandbox.util.Vector2;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.frame;
+package com.game.physicsandbox.frame;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +48,7 @@ public class FrameManager {
             for (long i = 0, t = lastNanoTime + (NANO_SECOND_PER_CALCULATE_FRAMES - firstCalculateFrames);
                  t <= currentNanoTime;
                  i++, t += NANO_SECOND_PER_CALCULATE_FRAMES) {
-
-                log.info("Calculate frame time: from {} to {}", t - NANO_SECOND_PER_CALCULATE_FRAMES, t);
-                log.info("Fixed time gap: {}ns", t - lastCalculateFrameTime);
-                log.info("Set fixed time gap: {}ns", NANO_SECOND_PER_CALCULATE_FRAMES);
-                calculateFrame.update(t);
+                calculateFrame.update(t, NANO_SECOND_PER_CALCULATE_FRAMES);
 
                 lastCalculateFrameTime = t;
             }

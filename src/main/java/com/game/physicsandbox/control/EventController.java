@@ -1,10 +1,10 @@
-package com.game.physicsandbox.physics.control;
+package com.game.physicsandbox.control;
 
 import com.game.physicsandbox.exception.EventNotRegisteredException;
-import com.game.physicsandbox.physics.event.EventBus;
-import com.game.physicsandbox.physics.event.EventRegistry;
-import com.game.physicsandbox.physics.input.KeyEvent;
-import com.game.physicsandbox.physics.input.MouseEvent;
+import com.game.physicsandbox.event.EventBus;
+import com.game.physicsandbox.event.EventRegistry;
+import com.game.physicsandbox.input.KeyEvent;
+import com.game.physicsandbox.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

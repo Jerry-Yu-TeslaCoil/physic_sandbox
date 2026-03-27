@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.util;
+package com.game.physicsandbox.util;
 
 /**
  * 二维向量记录类，提供基本的向量运算功能。

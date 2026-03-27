@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.event;
+package com.game.physicsandbox.event;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

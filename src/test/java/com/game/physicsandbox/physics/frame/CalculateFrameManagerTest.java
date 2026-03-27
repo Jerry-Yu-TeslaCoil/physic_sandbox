@@ -1,6 +1,7 @@
 package com.game.physicsandbox.physics.frame;
 
 import com.game.physicsandbox.ApplicationConfig;
+import com.game.physicsandbox.frame.FrameManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

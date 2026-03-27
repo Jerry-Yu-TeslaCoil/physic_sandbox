@@ -1,6 +1,5 @@
 package com.game.physicsandbox.event;
 
-import com.game.physicsandbox.physics.event.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

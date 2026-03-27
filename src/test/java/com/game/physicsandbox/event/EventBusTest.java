@@ -1,6 +1,5 @@
 package com.game.physicsandbox.event;
 
-import com.game.physicsandbox.physics.event.EventBus;
 import org.junit.Test;
 
 public class EventBusTest {

@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.frame;
+package com.game.physicsandbox.mechanism;
 
 public enum UpdateStage {
     EVENT,

@@ -1,5 +1,7 @@
 package com.game.physicsandbox.physics.util;
 
+import com.game.physicsandbox.util.MathUtil;
+import com.game.physicsandbox.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;

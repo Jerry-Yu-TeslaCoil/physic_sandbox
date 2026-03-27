@@ -1,6 +1,6 @@
-package com.game.physicsandbox.physics.event;
+package com.game.physicsandbox.event;
 
-import com.game.physicsandbox.physics.object.Component;
+import com.game.physicsandbox.object.Component;
 
 /**
  * 事件监听器接口

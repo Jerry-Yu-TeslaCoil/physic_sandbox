@@ -1,6 +1,6 @@
-package com.game.physicsandbox.physics.object;
+package com.game.physicsandbox.object;
 
-import com.game.physicsandbox.physics.object.impl.Transform;
+import com.game.physicsandbox.object.impl.Transform;
 import lombok.Getter;
 
 import java.util.ArrayList;

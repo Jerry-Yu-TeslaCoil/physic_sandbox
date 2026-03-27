@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.event;
+package com.game.physicsandbox.event;
 
 import lombok.Getter;
 import lombok.Setter;

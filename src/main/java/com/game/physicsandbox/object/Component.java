@@ -1,4 +1,4 @@
-package com.game.physicsandbox.physics.object;
+package com.game.physicsandbox.object;
 
 import lombok.Getter;
 import lombok.Setter;

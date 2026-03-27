@@ -1,8 +1,8 @@
-package com.game.physicsandbox.physics.control;
+package com.game.physicsandbox.control;
 
-import com.game.physicsandbox.physics.event.Event;
-import com.game.physicsandbox.physics.input.KeyEvent;
-import com.game.physicsandbox.physics.input.MouseEvent;
+import com.game.physicsandbox.event.Event;
+import com.game.physicsandbox.input.KeyEvent;
+import com.game.physicsandbox.input.MouseEvent;
 
 /**
  * 控制事件类。由用户输入转换而成的事件均继承此类。

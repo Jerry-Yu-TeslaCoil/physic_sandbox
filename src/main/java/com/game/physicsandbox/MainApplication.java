@@ -1,6 +1,6 @@
 package com.game.physicsandbox;
 
-import com.game.physicsandbox.physics.frame.FrameManager;
+import com.game.physicsandbox.frame.FrameManager;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

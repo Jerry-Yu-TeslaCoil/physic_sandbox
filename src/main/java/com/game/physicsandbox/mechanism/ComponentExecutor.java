@@ -1,6 +1,6 @@
-package com.game.physicsandbox.physics.mechanism;
+package com.game.physicsandbox.mechanism;
 
-import com.game.physicsandbox.physics.object.Component;
+import com.game.physicsandbox.object.Component;
 
 public interface ComponentExecutor {
     void register(Component component);
