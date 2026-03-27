@@ -1,9 +1,9 @@
 package com.game.physicsandbox.physics.control;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import com.game.physicsandbox.physics.input.KeyCode;
+import com.game.physicsandbox.physics.input.KeyEvent;
+import com.game.physicsandbox.physics.input.MouseButton;
+import com.game.physicsandbox.physics.input.MouseEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public class InputMapper {
      * @return 其对应的事件类型
      */
     public Class<? extends ControlEvent> getMappingEvent(MouseEvent event) {
-        return mouseMapping.getOrDefault(event.getButton(), null);
+        return mouseMapping.getOrDefault(event.button(), null);
     }
 
     /**
@@ -70,6 +70,6 @@ public class InputMapper {
      * @return 其对应的事件类型
      */
     public Class<? extends ControlEvent> getMappingEvent(KeyEvent event) {
-        return keyMapping.getOrDefault(event.getCode(), null);
+        return keyMapping.getOrDefault(event.code(), null);
     }
 }

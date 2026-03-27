@@ -2,8 +2,8 @@ package com.game.physicsandbox.physics.control;
 
 
 import com.game.physicsandbox.physics.event.Event;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import com.game.physicsandbox.physics.input.KeyEvent;
+import com.game.physicsandbox.physics.input.MouseEvent;
 
 /**
  * 控制事件工厂。用于控制器根据用户输入生成事件。
