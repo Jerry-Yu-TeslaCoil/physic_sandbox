@@ -10,6 +10,7 @@ import com.game.physicsandbox.object.Component;
  * @author Jerry-Yu-TeslaCoil
  * @version 1.0
  */
+@org.springframework.stereotype.Component
 public class PhysicAnalyzer extends ComponentExecutor {
 
     /**

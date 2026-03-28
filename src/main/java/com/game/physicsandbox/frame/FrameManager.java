@@ -52,13 +52,7 @@ public class FrameManager {
 
                 lastCalculateFrameTime = t;
             }
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            log.info("Render frame time: {}ns", currentNanoTime);
+            log.trace("Render frame time: {}ns", currentNanoTime);
 
             lastNanoTime = currentNanoTime;
         }
