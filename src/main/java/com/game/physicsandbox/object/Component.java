@@ -12,5 +12,5 @@ public abstract class Component {
 
     protected GameObject gameObject;
 
-    public abstract void update(long time);
+    public abstract void update(long currentTime, long delta);
 }

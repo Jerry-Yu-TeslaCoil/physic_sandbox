@@ -51,16 +51,16 @@ public class EventBus implements ComponentExecutor {
     /**
      * 分发指定时间戳之前的所有事件
      * 在计算帧前期调用，分发时间段内的所有事件
-     * @param timestamp 当前计算帧的时间戳
+     * @param currentTime 当前计算帧的时间纳秒
      */
-    public void dispatchEvents(long timestamp) {
+    public void dispatchEvents(long currentTime, long deltaTime) {
         List<Event> eventsToDispatch = new ArrayList<>();
 
         synchronized (eventQueue) {
             Iterator<Event> iterator = eventQueue.iterator();
             while (iterator.hasNext()) {
                 Event event = iterator.next();
-                if (event.getTimestamp() <= timestamp) {
+                if (event.getTimestamp() <= currentTime) {
                     eventsToDispatch.add(event);
                     iterator.remove();
                 } else {
@@ -76,7 +76,7 @@ public class EventBus implements ComponentExecutor {
 
         components.forEach((component) -> {
             try {
-               component.update(timestamp);
+               component.update(currentTime, deltaTime);
             } catch (Exception e) {
                 log.warn(e.getMessage());
             }

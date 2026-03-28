@@ -28,7 +28,7 @@ public class CalculateFrame {
         log.trace("Set fixed time gap: {}ns", deltaTime);
 
         //更新事件总线
-        eventBus.dispatchEvents(currentTime);
+        eventBus.dispatchEvents(currentTime, deltaTime);
         log.trace("Update EventBus: {}ns", currentTime);
 
 

@@ -7,16 +7,16 @@ import com.game.physicsandbox.util.Vector2;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-@UpdateLayer(UpdateStage.PHYSICS)
-public class Transform extends Component {
 
+@UpdateLayer(UpdateStage.UPDATE)
+public class Transform extends Component {
+    @Setter
+    @Getter
     private Vector2 position;
-    private Vector2 velocity;
+
+    private Vector2 positionRecord;
 
     @Override
-    public void update(long time) {
-        position.add(velocity.mul(time));
+    public void update(long currentTime, long deltaTime) {
     }
 }

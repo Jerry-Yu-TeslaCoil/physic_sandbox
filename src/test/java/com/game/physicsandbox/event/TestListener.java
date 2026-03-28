@@ -11,7 +11,8 @@ public class TestListener extends EventListener<TestEvent> {
     }
 
     @Override
-    public void update(long time) {
-        log.info("Test listener updated: {}", time);
+    public void update(long currentTime, long deltaTime) {
+        log.info("Test listener updated: {}", currentTime);
+        log.info("Update time gap: {}", deltaTime);
     }
 }
