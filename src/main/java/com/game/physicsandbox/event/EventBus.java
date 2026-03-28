@@ -164,23 +164,10 @@ public class EventBus extends ComponentExecutor {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends Event> Class<T> cast(EventListener<T> listener) {
         if (listener == null) {
             throw new IllegalArgumentException("监听器不能为null");
         }
-        ListensTo listensTo = listener.getClass().getAnnotation(ListensTo.class);
-        if (listensTo == null) {
-            throw new EventTypeException(listener.getClass() + "必须有注解@ListensTo指定监听器类型");
-        }
-        Class<? extends Event> value = listensTo.value();
-        Class<T> eventType;
-        try {
-            eventType = (Class<T>) value;
-            return eventType;
-        } catch (Exception e) {
-            throw new EventTypeException(
-                    listener.getClass().getSimpleName() + "@ListensTo指定类型与监听器类型不一致");
-        }
+        return listener.getEventType();
     }
 }

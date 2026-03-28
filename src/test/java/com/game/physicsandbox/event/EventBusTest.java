@@ -12,7 +12,10 @@ public class EventBusTest {
     @Test
     public void test() {
         TestListener listener = new TestListener();
+        MultipleExtendListener extendListener = new MultipleExtendListener();
+
         eventBus.register(listener);
+        eventBus.register(extendListener);
 
         eventBus.publish(new TestEvent("Test Event Published"));
 

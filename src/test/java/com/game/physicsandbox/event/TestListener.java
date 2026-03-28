@@ -3,7 +3,6 @@ package com.game.physicsandbox.event;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ListensTo(TestEvent.class)
 public class TestListener extends EventListener<TestEvent> {
     @Override
     public void onEvent(TestEvent event) {
