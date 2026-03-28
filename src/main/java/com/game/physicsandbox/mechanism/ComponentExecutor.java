@@ -22,4 +22,12 @@ public abstract class ComponentExecutor {
             components.remove(component);
         }
     }
+
+    public void update(long currentTime, long deltaTime) {
+        synchronized (components) {
+            for (Component component : components) {
+                component.update(currentTime, deltaTime);
+            }
+        }
+    }
 }
