@@ -20,7 +20,7 @@ public class ConstraintValidationTest {
 
     private final double spf = 1.0 / 480;
     private final double ZERO_DELTA = 1e-2;
-    private final Vector2 gravity = new Vector2(0, -9.8);
+    private final Vector2 gravityAcc = new Vector2(0, -9.8);
 
     /**
      * 单重力测试
@@ -33,7 +33,7 @@ public class ConstraintValidationTest {
         //时间线
         for (double t = 0; t <= 2; t += spf) {
             //重力应用
-            Vector2 gravityDiff = gravity.mul(spf);
+            Vector2 gravityDiff = gravityAcc.mul(spf);
             bSpeed = bSpeed.add(gravityDiff);
             //碰撞约束计算
             //无约束下落
@@ -71,7 +71,7 @@ public class ConstraintValidationTest {
             Vector2 aRec = aPos;
             Vector2 bRec = bPos;
             //重力应用
-            Vector2 gravityDiff = gravity.mul(spf);
+            Vector2 gravityDiff = gravityAcc.mul(spf);
             //log.info("当前帧重力影响: {}", gravityDiff);
             aSpeed = aSpeed.add(gravityDiff);
             bSpeed = bSpeed.add(gravityDiff);
@@ -141,7 +141,7 @@ public class ConstraintValidationTest {
         //时间线
         for (double t = 0; t <= 5; t += spf) {
             //重力应用
-            Vector2 gravityDiff = gravity.mul(spf);
+            Vector2 gravityDiff = gravityAcc.mul(spf);
             //log.info("当前帧重力影响: {}", gravityDiff);
             aSpeed = aSpeed.add(gravityDiff);
             bSpeed = bSpeed.add(gravityDiff);
@@ -219,7 +219,7 @@ public class ConstraintValidationTest {
         Vector2 bRec = bPos;
         for (double t = 0; t <= 2; t += spf) {
             //重力应用
-            Vector2 gravityDiff = gravity.mul(spf * spf);
+            Vector2 gravityDiff = gravityAcc.mul(spf * spf);
             Vector2 bPosNext = bPos.mul(2).sub(bRec).add(gravityDiff);
             //碰撞约束计算
             //无约束下落
@@ -259,7 +259,7 @@ public class ConstraintValidationTest {
         //时间线
         for (double t = 0; t <= 5; t += spf) {
             //重力应用
-            Vector2 gravityDiff = gravity.mul(spf * spf);
+            Vector2 gravityDiff = gravityAcc.mul(spf * spf);
             //log.info("当前帧重力影响: {}", gravityDiff);
             Vector2 aPosNext = aPos.mul(2).sub(aRec).add(gravityDiff);
             Vector2 bPosNext = bPos.mul(2).sub(bRec).add(gravityDiff);
@@ -328,7 +328,7 @@ public class ConstraintValidationTest {
         //时间线
         for (double t = 0; t <= 5; t += spf) {
             //重力应用
-            Vector2 gravityAcc = gravity.mul(spf * spf);
+            Vector2 gravityAcc = this.gravityAcc.mul(spf * spf);
             //log.info("当前帧重力影响: {}", gravityAcc);
             Vector2 aPosNext = aPos.mul(2).sub(aRec).add(gravityAcc);
             Vector2 bPosNext = bPos.mul(2).sub(bRec).add(gravityAcc);

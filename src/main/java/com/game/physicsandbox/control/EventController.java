@@ -1,8 +1,8 @@
 package com.game.physicsandbox.control;
 
-import com.game.physicsandbox.exception.EventNotRegisteredException;
 import com.game.physicsandbox.event.EventBus;
 import com.game.physicsandbox.event.EventRegistry;
+import com.game.physicsandbox.exception.EventNotRegisteredException;
 import com.game.physicsandbox.input.KeyEvent;
 import com.game.physicsandbox.input.MouseEvent;
 import lombok.extern.slf4j.Slf4j;

@@ -16,16 +16,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Slf4j
 @org.springframework.stereotype.Component
-public class EventBus implements ComponentExecutor {
+public class EventBus extends ComponentExecutor {
 
     // 事件类型到监听器列表的映射
     private final Map<Class<? extends Event>, List<EventListener<?>>> listenerMap = new ConcurrentHashMap<>();
 
     // 事件存储队列，按时间戳排序
     private final List<Event> eventQueue = new ArrayList<>();
-
-    // 组件存储队列，在此阶段更新
-    private final List<Component> components = new ArrayList<>();
 
     /**
      * 发布事件（自动添加当前时间戳）
@@ -132,8 +129,10 @@ public class EventBus implements ComponentExecutor {
 
     @Override
     public void register(Component component) {
-        if (!components.contains(component)) {
-            components.add(component);
+        synchronized (components) {
+            if (!components.contains(component)) {
+                components.add(component);
+            }
         }
         if (component instanceof EventListener<? extends Event>) {
             registerListener((EventListener<? extends Event>) component);
@@ -142,7 +141,9 @@ public class EventBus implements ComponentExecutor {
 
     @Override
     public void unregister(Component component) {
-        components.remove(component);
+        synchronized (components) {
+            components.remove(component);
+        }
 
         if (component instanceof EventListener<? extends Event>) {
             unregisterListener((EventListener<? extends Event>) component);
