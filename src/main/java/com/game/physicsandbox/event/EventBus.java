@@ -1,6 +1,5 @@
 package com.game.physicsandbox.event;
 
-import com.game.physicsandbox.exception.EventTypeException;
 import com.game.physicsandbox.mechanism.ComponentExecutor;
 import com.game.physicsandbox.object.Component;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +49,8 @@ public class EventBus extends ComponentExecutor {
      * 在计算帧前期调用，分发时间段内的所有事件
      * @param currentTime 当前计算帧的时间纳秒
      */
-    public void dispatchEvents(long currentTime, long deltaTime) {
+    @Override
+    public void update(long currentTime, long deltaTime) {
         List<Event> eventsToDispatch = new ArrayList<>();
 
         synchronized (eventQueue) {

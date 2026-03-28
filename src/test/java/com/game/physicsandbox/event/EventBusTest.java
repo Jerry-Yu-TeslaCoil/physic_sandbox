@@ -19,10 +19,10 @@ public class EventBusTest {
 
         eventBus.publish(new TestEvent("Test Event Published"));
 
-        eventBus.dispatchEvents(System.currentTimeMillis(), (long)(1e9 / 480));
+        eventBus.update(System.currentTimeMillis(), (long)(1e9 / 480));
 
         eventBus.unregister(listener);
 
-        eventBus.dispatchEvents(System.currentTimeMillis(), (long)(1e9 / 480));
+        eventBus.update(System.currentTimeMillis(), (long)(1e9 / 480));
     }
 }

@@ -3,6 +3,7 @@ package com.game.physicsandbox.frame;
 import com.game.physicsandbox.event.EventBus;
 import com.game.physicsandbox.physics.ComponentUpdater;
 import com.game.physicsandbox.physics.PhysicAnalyzer;
+import com.game.physicsandbox.physics.PhysicUpdater;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,17 @@ public class CalculateFrame {
     private final EventBus eventBus;
     private final ComponentUpdater componentUpdater;
     private final PhysicAnalyzer physicAnalyzer;
+    private final PhysicUpdater physicUpdater;
 
     @Autowired
     public CalculateFrame(EventBus eventBus,
                           ComponentUpdater componentUpdater,
-                          PhysicAnalyzer physicAnalyzer) {
+                          PhysicAnalyzer physicAnalyzer,
+                          PhysicUpdater physicUpdater) {
         this.eventBus = eventBus;
         this.componentUpdater = componentUpdater;
         this.physicAnalyzer = physicAnalyzer;
+        this.physicUpdater = physicUpdater;
     }
 
     /**
@@ -36,7 +40,7 @@ public class CalculateFrame {
         log.trace("Set fixed time gap: {}ns", deltaTime);
 
         //更新事件总线
-        eventBus.dispatchEvents(currentTime, deltaTime);
+        eventBus.update(currentTime, deltaTime);
         log.trace("Update EventBus: {}ns", currentTime);
 
         //更新组件更新器
@@ -46,5 +50,8 @@ public class CalculateFrame {
         //更新物体分析器
         this.physicAnalyzer.update(currentTime, deltaTime);
         log.trace("Update PhysicAnalyzer: {}ns", currentTime);
+
+        this.physicUpdater.update(currentTime, deltaTime);
+        log.trace("Update PhysicUpdater: {}ns", currentTime);
     }
 }
