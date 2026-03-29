@@ -12,6 +12,9 @@ public class GameObject {
     private final Transform transform = new Transform();
     private final List<Component> componentList = new ArrayList<>();
 
+    /**
+     * 无参创建元素。
+     */
     public GameObject() {
         componentList.add(transform);
     }

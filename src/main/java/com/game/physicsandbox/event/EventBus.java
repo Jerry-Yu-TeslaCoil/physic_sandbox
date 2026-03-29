@@ -71,13 +71,7 @@ public class EventBus extends ComponentExecutor {
             dispatchEvent(event);
         }
 
-        components.forEach((component) -> {
-            try {
-               component.update(currentTime, deltaTime);
-            } catch (Exception e) {
-                log.warn(e.getMessage());
-            }
-        });
+        super.update(currentTime, deltaTime);
     }
 
     /**
