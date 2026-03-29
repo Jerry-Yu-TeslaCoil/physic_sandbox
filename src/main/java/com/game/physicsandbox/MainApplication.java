@@ -1,6 +1,8 @@
 package com.game.physicsandbox;
 
 import com.game.physicsandbox.frame.FrameManager;
+import com.game.physicsandbox.lifecycle.LifeCycleManager;
+import com.game.physicsandbox.object.GameObjectFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -12,6 +14,11 @@ public class MainApplication {
         ApplicationContext context = new SpringApplicationBuilder(MainApplication.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
+
+        GameObjectFactory gameObjectFactory = context.getBean(GameObjectFactory.class);
+        gameObjectFactory.create("MainGameObject");
+
+
 
         FrameManager manager = context.getBean(FrameManager.class);
         new Thread(() -> {

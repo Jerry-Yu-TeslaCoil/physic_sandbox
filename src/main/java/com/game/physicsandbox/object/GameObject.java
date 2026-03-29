@@ -1,8 +1,9 @@
 package com.game.physicsandbox.object;
 
 import com.game.physicsandbox.lifecycle.LifeCycleManager;
-import com.game.physicsandbox.object.impl.Transform;
+import com.game.physicsandbox.object.component.Transform;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +15,26 @@ import java.util.List;
  * @version 1.0
  */
 public class GameObject {
-
     @Getter
-    private final Transform transform = new Transform();
+    @Setter
+    private String name;
+    @Getter
+    private final Transform transform;
     private final List<Component> componentList = new ArrayList<>();
     @Getter
     private final boolean destroyed = false;
 
-    private final LifeCycleManager lifeCycleManager;
+    protected final LifeCycleManager lifeCycleManager;
 
     /**
      * 无参创建元素。
      */
-    protected GameObject(LifeCycleManager lifeCycleManager) {
-        componentList.add(transform);
+    protected GameObject(LifeCycleManager lifeCycleManager, String name) {
         this.lifeCycleManager = lifeCycleManager;
+        Transform transform = new Transform();
+        this.transform = transform;
+        componentList.add(transform);
+        this.name = name;
     }
 
     public void addComponent(Component component) {

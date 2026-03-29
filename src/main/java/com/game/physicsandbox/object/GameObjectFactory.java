@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * 元素创建工厂。会对创建的元素自动初始化。
+ *
+ * @author Jerry-Yu-TeslaCoil
+ * @version 1.0
  */
 @Component
 public class GameObjectFactory {
@@ -19,10 +22,10 @@ public class GameObjectFactory {
 
     /**
      * 创建并初始化一个GameObject。
-     * @return 创建的GameObject
+     * @return 创建的GameObject(代理对象)
      */
-    public GameObject create() {
-        GameObject gameObject = new GameObject(lifeCycleManager);
+    public GameObject create(String name) {
+        GameObject gameObject = new GameObject(lifeCycleManager, name);
         gameObject = lifeCycleManager.initializeGameObject(gameObject);
         return gameObject;
     }

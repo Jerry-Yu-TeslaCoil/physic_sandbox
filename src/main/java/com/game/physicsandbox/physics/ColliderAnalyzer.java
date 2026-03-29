@@ -14,4 +14,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ColliderAnalyzer extends ComponentExecutor {
+
+    @Override
+    public void update(long currentTime, long deltaTime) {
+
+
+        super.update(currentTime, deltaTime);
+    }
 }

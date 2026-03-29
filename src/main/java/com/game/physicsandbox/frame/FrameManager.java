@@ -1,5 +1,8 @@
 package com.game.physicsandbox.frame;
 
+import com.game.physicsandbox.lifecycle.LifeCycleManager;
+import com.game.physicsandbox.mechanism.UpdateStage;
+import com.game.physicsandbox.render.Renderer;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +27,18 @@ public class FrameManager {
 
     private CalculateFrame calculateFrame;
 
+    private final LifeCycleManager lifeCycleManager;
+    private final Renderer renderer;
+
 
     @Autowired
-    public FrameManager(CalculateFrame calculateFrame) {
+    public FrameManager(CalculateFrame calculateFrame, LifeCycleManager lifeCycleManager, Renderer renderer) {
         this.calculateFrame = calculateFrame;
+        this.lifeCycleManager = lifeCycleManager;
+        this.renderer = renderer;
     }
 
     public void run() {
-        long lastCalculateFrameTime = 0;
         long currentNanoTime;
         long lastNanoTime = -1;
         while (running) {
@@ -39,7 +46,7 @@ public class FrameManager {
 
             if (lastNanoTime < 0) {
                 lastNanoTime = currentNanoTime;
-                log.info("Continued");
+                log.trace("First Frame Continued");
                 continue;
             }
 
@@ -49,13 +56,14 @@ public class FrameManager {
                  t <= currentNanoTime;
                  i++, t += NANO_SECOND_PER_CALCULATE_FRAMES) {
                 calculateFrame.update(t, NANO_SECOND_PER_CALCULATE_FRAMES);
-
-                lastCalculateFrameTime = t;
             }
+
+            lifeCycleManager.stageSwift(UpdateStage.RENDER);
+
             log.trace("Render frame time: {}ns", currentNanoTime);
+            renderer.update(currentNanoTime, NANO_SECOND_PER_CALCULATE_FRAMES);
 
             lastNanoTime = currentNanoTime;
         }
     }
 }
-

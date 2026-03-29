@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TestListener extends EventListener<TestEvent> {
+
     @Override
     public void onEvent(TestEvent event) {
         log.info("TestEvent received: {}", event.getEventString());

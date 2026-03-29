@@ -1,4 +1,4 @@
-package com.game.physicsandbox.object.impl;
+package com.game.physicsandbox.object.component;
 
 import com.game.physicsandbox.mechanism.UpdateLayer;
 import com.game.physicsandbox.mechanism.UpdateStage;

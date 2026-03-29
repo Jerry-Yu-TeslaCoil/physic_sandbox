@@ -2,8 +2,8 @@ package com.game.physicsandbox.lifecycle;
 
 import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.object.GameObject;
+import com.game.physicsandbox.object.component.Transform;
 import lombok.Getter;
-
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public class GameObjectProxy extends GameObject {
      * @param gameObject 代理的元素
      */
     protected GameObjectProxy(LifeCycleManager lifeCycleManager, GameObject gameObject) {
-        super(lifeCycleManager);
+        super(lifeCycleManager, gameObject.getName());
         this.gameObject = gameObject;
     }
 
@@ -49,6 +49,7 @@ public class GameObjectProxy extends GameObject {
     @Override
     public void addComponent(Component component) {
         gameObject.addComponent(component);
+        component.setGameObject(this);
     }
 
     @Override
@@ -69,5 +70,20 @@ public class GameObjectProxy extends GameObject {
     @Override
     public Component[] getComponents() {
         return gameObject.getComponents();
+    }
+
+    @Override
+    public String getName() {
+        return gameObject.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        this.gameObject.setName(name);
+    }
+
+    @Override
+    public Transform getTransform() {
+        return gameObject.getTransform();
     }
 }

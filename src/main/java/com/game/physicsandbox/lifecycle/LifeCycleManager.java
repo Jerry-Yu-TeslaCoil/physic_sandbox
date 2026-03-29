@@ -6,7 +6,7 @@ import com.game.physicsandbox.mechanism.UpdateLayer;
 import com.game.physicsandbox.mechanism.UpdateStage;
 import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.object.GameObject;
-import com.game.physicsandbox.object.impl.Transform;
+import com.game.physicsandbox.object.component.Transform;
 import com.game.physicsandbox.physics.*;
 import com.game.physicsandbox.render.Renderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,13 +125,21 @@ public class LifeCycleManager extends ComponentExecutor {
      * @param gameObject 初始化的元素
      */
     public GameObject initializeGameObject(GameObject gameObject) {
-        if (!(gameObject instanceof GameObjectProxy)) {
-            throw new IllegalArgumentException("GameObject outside must be an instance of GameObjectProxy");
-        }
-        this.gameObjects.add((GameObjectProxy) gameObject);
+        GameObjectProxy gameObjectProxy = new GameObjectProxy(this, gameObject);
+        this.gameObjects.add(gameObjectProxy);
         Transform transform = gameObject.getTransform();
         registerToExecutor(transform);
-        return new GameObjectProxy(this, gameObject);
+        return gameObjectProxy;
+    }
+
+    /**
+     * 寻找符合名字的元素。
+     * @param name 元素名
+     * @return 名字一致的元素
+     */
+    public List<GameObject> findGameObjects(String name) {
+        return gameObjects.stream().filter(gameObject -> gameObject.getName().equals(name))
+                .map(gameObjectProxy -> (GameObject) gameObjectProxy).toList();
     }
 
     /**
@@ -185,7 +193,7 @@ public class LifeCycleManager extends ComponentExecutor {
             return switch (stage) {
                 case CLEAN -> this;
                 case EVENT -> this.eventBus;
-                case Components -> this.componentUpdater;
+                case COMPONENTS -> this.componentUpdater;
                 case PHYSICS -> this.physicAnalyzer;
                 case UPDATE -> this.physicUpdater;
                 case COLLISION -> this.colliderAnalyzer;
