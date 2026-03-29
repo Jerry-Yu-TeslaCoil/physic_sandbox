@@ -22,8 +22,8 @@ import java.util.*;
 @org.springframework.stereotype.Component
 public class LifeCycleManager extends ComponentExecutor {
 
-    private final List<GameObject> gameObjects = new ArrayList<>();
-    private final List<GameObject> slowDeleteList = new ArrayList<>();
+    private final List<GameObjectProxy> gameObjects = new ArrayList<>();
+    private final List<GameObjectProxy> slowDeleteList = new ArrayList<>();
 
     private final Map<Component, ComponentExecutor> stageOfComponents = new HashMap<>();
     private final List<Component> managementList = new ArrayList<>();
@@ -125,7 +125,10 @@ public class LifeCycleManager extends ComponentExecutor {
      * @param gameObject 初始化的元素
      */
     public GameObject initializeGameObject(GameObject gameObject) {
-        this.gameObjects.add(gameObject);
+        if (!(gameObject instanceof GameObjectProxy)) {
+            throw new IllegalArgumentException("GameObject outside must be an instance of GameObjectProxy");
+        }
+        this.gameObjects.add((GameObjectProxy) gameObject);
         Transform transform = gameObject.getTransform();
         registerToExecutor(transform);
         return new GameObjectProxy(this, gameObject);
@@ -136,12 +139,15 @@ public class LifeCycleManager extends ComponentExecutor {
      * @param gameObject 要删除的元素
      */
     public void destroyGameObject(GameObject gameObject) {
+        if (!(gameObject instanceof GameObjectProxy)) {
+            throw new IllegalArgumentException("GameObject outside must be an instance of GameObjectProxy");
+        }
         Arrays.stream(gameObject.getComponents()).toList().forEach(component -> {
             if (component.getGameObject() != null) {
                 component.getGameObject().removeComponent(component);
             }
         });
-        this.slowDeleteList.add(gameObject);
+        this.slowDeleteList.add((GameObjectProxy) gameObject);
     }
 
     /**
@@ -199,7 +205,10 @@ public class LifeCycleManager extends ComponentExecutor {
      */
     @Override
     public void update(long currentTime, long deltaTime) {
-        this.slowDeleteList.forEach(this.gameObjects::remove);
+        for (GameObjectProxy object : this.slowDeleteList) {
+            this.gameObjects.remove(object);
+            object.destroy();
+        }
         this.slowDeleteList.clear();
 
         //取消引用自销毁组件
