@@ -1,4 +1,4 @@
-package com.game.physicsandbox.render.swing;
+package com.game.physicsandbox.swing;
 
 import com.game.physicsandbox.mechanism.UpdateLayer;
 import com.game.physicsandbox.mechanism.UpdateStage;

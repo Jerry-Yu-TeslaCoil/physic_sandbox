@@ -33,7 +33,7 @@ public class RigidBody extends Component {
     public void update(long currentTime, long delta) {
         Vector2 force = forces.stream().reduce(Vector2.zero(), Vector2::add);
         if (gravity) {
-            force = force.add(new Vector2(0, GRAVITY_COEFFICIENT));
+            force = force.add(new Vector2(0, GRAVITY_COEFFICIENT).mul(mass));
         }
         Vector2 acc = force.mul(1 / mass);
         if (!isKinematic) {

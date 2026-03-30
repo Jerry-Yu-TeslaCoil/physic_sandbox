@@ -1,4 +1,4 @@
-package com.game.physicsandbox.render.swing;
+package com.game.physicsandbox.swing;
 
 import com.game.physicsandbox.render.Circle;
 import com.game.physicsandbox.render.Line;
