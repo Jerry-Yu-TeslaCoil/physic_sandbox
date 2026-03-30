@@ -25,45 +25,48 @@ public class MainApplication {
                 .headless(false)
                 .run(args);
 
-        Component component1 = new Component() {
-            @Override
-            public void update(long currentTime, long delta) {
-                Transform transform = gameObject.getTransform();
-                transform.addAcceleration(new Vector2(-3, 0));
-                log.trace("{} position = {}", gameObject.getName(), transform.getPosition());
-            }
-        };
+        double force = 20.0;
 
-        Component component2 = new Component() {
-            @Override
-            public void update(long currentTime, long delta) {
-                Transform transform = gameObject.getTransform();
-                transform.addAcceleration(new Vector2(3, 0));
-                GameObject object = gameObject.getLifeCycleManager().findGameObjects("MainGameObject1").get(0);
-                log.trace("{} position = {}, differ = {}", gameObject.getName(), transform.getPosition(),
-                        object.getTransform().getPosition().sub(transform.getPosition()));
-            }
-        };
+        Component component1 = new TestComponent(force, "MainGameObject2");
+
+        Component component2 = new TestComponent(force, "MainGameObject3");
+
+        Component component3 = new TestComponent(force, "MainGameObject1");
+
+        Component component12 = new TestComponent(force, "MainGameObject3");
+
+        Component component22 = new TestComponent(force, "MainGameObject1");
+
+        Component component32 = new TestComponent(force, "MainGameObject2");
 
         GraphicFrame frame = context.getBean(GraphicFrame.class);
 
         GameObjectFactory gameObjectFactory = context.getBean(GameObjectFactory.class);
+
         GameObject object1 = gameObjectFactory.create("MainGameObject1");
+        GameObject object2 = gameObjectFactory.create("MainGameObject2");
+        GameObject object3 = gameObjectFactory.create("MainGameObject3");
+
         object1.getTransform().setPosition(new Vector2(3, 0));
-        object1.addComponent(new RoundCollider(2));
+        object1.addComponent(new RoundCollider(1));
         object1.addComponent(new RigidBody());
         object1.addComponent(component1);
+        //object1.addComponent(component12);
         object1.addComponent(frame.createPanelRenderer());
 
-        GameObject object2 = gameObjectFactory.create("MainGameObject2");
         object2.getTransform().setPosition(new Vector2(-3, 0));
         object2.addComponent(new RoundCollider(2));
-        RigidBody rigidBody = new RigidBody();
-        rigidBody.setMass(3.0);
-        rigidBody.addForce(new Vector2(3, 0));
         object2.addComponent(new RigidBody());
         object2.addComponent(component2);
+        //object2.addComponent(component22);
         object2.addComponent(frame.createPanelRenderer());
+
+        object3.getTransform().setPosition(new Vector2(0, 3 * 1.732));
+        object3.addComponent(new RoundCollider(3));
+        object3.addComponent(new RigidBody());
+        object3.addComponent(component3);
+        //object3.addComponent(component32);
+        object3.addComponent(frame.createPanelRenderer());
 
 
         FrameManager manager = context.getBean(FrameManager.class);
@@ -78,5 +81,34 @@ public class MainApplication {
         }).start();
         */
         manager.run();
+    }
+}
+
+class TestComponent extends Component {
+    private final double force;
+    private RigidBody rigidBody;
+    private final String target;
+    private GameObject targetGameObject;
+
+    public TestComponent(double force, String target) {
+        this.force = force;
+        this.target = target;
+    }
+
+    @Override
+    public void addedToGameObject(GameObject gameObject) {
+        super.addedToGameObject(gameObject);
+        rigidBody = gameObject.getComponent(RigidBody.class);
+        targetGameObject = gameObject.getLifeCycleManager().findGameObjects(target).get(0);
+    }
+
+    @Override
+    public void update(long currentTime, long delta) {
+        if (rigidBody == null || targetGameObject == null) {
+            return;
+        }
+        Vector2 vector = targetGameObject.getTransform().getPosition().sub(gameObject.getTransform().getPosition());
+        vector = vector.normalize();
+        rigidBody.addForce(vector.mul(force));
     }
 }

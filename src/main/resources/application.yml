@@ -1,4 +1,4 @@
 settings:
   physics:
-    calculate_frames_per_second: 120
+    calculate_frames_per_second: 480
     constraint_iterate_time: 12

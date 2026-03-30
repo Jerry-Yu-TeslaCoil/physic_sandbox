@@ -35,6 +35,10 @@ public abstract class Collider extends Component {
         return this.getGameObject().getTransform().getPosition().add(centerRelativePosition);
     }
 
+    public abstract void setTriggered(boolean isTriggered);
+
+    public abstract boolean isTriggered();
+
     @Override
     public void update(long currentTime, long delta) {
 

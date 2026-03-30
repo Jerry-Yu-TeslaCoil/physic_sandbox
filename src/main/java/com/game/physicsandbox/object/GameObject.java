@@ -40,7 +40,7 @@ public class GameObject {
 
     public void addComponent(Component component) {
         if (!componentList.contains(component) && component.getGameObject() == null) {
-            component.setGameObject(this);
+            component.addedToGameObject(this);
             componentList.add(component);
             lifeCycleManager.slowRegisterToExecutor(component);
         }
@@ -48,7 +48,7 @@ public class GameObject {
 
     public void addComponentInstantly(Component component) {
         if (!componentList.contains(component) && component.getGameObject() == null) {
-            component.setGameObject(this);
+            component.addedToGameObject(this);
             componentList.add(component);
             lifeCycleManager.quickRegisterToExecutor(component);
         }

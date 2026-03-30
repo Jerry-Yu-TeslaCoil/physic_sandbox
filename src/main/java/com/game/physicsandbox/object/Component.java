@@ -24,4 +24,8 @@ public abstract class Component {
      * @param delta 时间增量纳秒
      */
     public abstract void update(long currentTime, long delta);
+
+    public void addedToGameObject(GameObject gameObject) {
+        this.gameObject = gameObject;
+    }
 }

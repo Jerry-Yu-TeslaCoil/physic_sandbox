@@ -49,13 +49,13 @@ public class GameObjectProxy extends GameObject {
     @Override
     public void addComponent(Component component) {
         gameObject.addComponent(component);
-        component.setGameObject(this);
+        component.addedToGameObject(this);
     }
 
     @Override
     public void addComponentInstantly(Component component) {
         gameObject.addComponentInstantly(component);
-        component.setGameObject(this);
+        component.addedToGameObject(this);
     }
 
     @Override

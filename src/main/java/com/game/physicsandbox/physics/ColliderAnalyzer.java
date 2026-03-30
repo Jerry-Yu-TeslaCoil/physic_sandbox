@@ -6,6 +6,7 @@ import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.object.component.Transform;
 import com.game.physicsandbox.physics.component.ColliderConstraint;
 import com.game.physicsandbox.util.Vector2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.*;
  * @author Jerry-Yu-TeslaCoil
  * @version 1.0
  */
+@Slf4j
 @org.springframework.stereotype.Component
 public class ColliderAnalyzer extends ComponentExecutor {
 
@@ -32,6 +34,8 @@ public class ColliderAnalyzer extends ComponentExecutor {
     }
 
     public void cleanConstraintRecord() {
+        components.stream().filter(component -> component instanceof Collider)
+                .forEach(component -> ((Collider) component).setTriggered(false));
         constraintRecord.clear();
     }
 

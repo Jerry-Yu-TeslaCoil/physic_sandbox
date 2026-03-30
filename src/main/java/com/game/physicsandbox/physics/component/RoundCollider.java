@@ -13,6 +13,7 @@ import lombok.Setter;
 public class RoundCollider extends Collider {
 
     private double radius;
+    private boolean isTriggered;
 
     public RoundCollider(double radius) {
         this.radius = radius;

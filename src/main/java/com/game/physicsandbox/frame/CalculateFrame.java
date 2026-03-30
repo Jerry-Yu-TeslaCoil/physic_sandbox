@@ -48,11 +48,13 @@ public class CalculateFrame {
      */
     public void update(long currentTime, long deltaTime) {
 
-        //log.trace("Calculate frame time: from {} to {}", currentTime - deltaTime, currentTime);
-        //log.trace("Fixed time gap: {}ns", currentTime - deltaTime);
-        //log.trace("Set fixed time gap: {}ns", deltaTime);
-
         lifeCycleManager.stageSwift(UpdateStage.CLEAN);
+
+        //清除约束列表
+        colliderAnalyzer.cleanConstraintRecord();
+
+        //更新约束求解器的加速度到物体Transform
+        constraintSolver.updateAcceleration(deltaTime, currentTime);
 
         //更新生命周期管理器
         lifeCycleManager.update(currentTime, deltaTime);
@@ -100,7 +102,5 @@ public class CalculateFrame {
             constraintSolver.update(currentTime, deltaTime);
             //log.trace("Update ConstraintSolver: {}ns", currentTime);
         }
-        //更新约束求解器的加速度到物体Transform
-        constraintSolver.updateAcceleration(deltaTime, currentTime);
     }
 }

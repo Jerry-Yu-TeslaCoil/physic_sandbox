@@ -6,6 +6,7 @@ import com.game.physicsandbox.object.component.Transform;
 import com.game.physicsandbox.physics.Collider;
 import com.game.physicsandbox.physics.Constraint;
 import com.game.physicsandbox.util.Vector2;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
@@ -14,7 +15,9 @@ import java.util.Objects;
 @UpdateLayer(UpdateStage.CONSTRAINT)
 public class ColliderConstraint extends Constraint {
 
+    @Getter
     private final Collider colliderA;
+    @Getter
     private final Collider colliderB;
 
     private Vector2 accelerationA = Vector2.zero();
@@ -43,6 +46,8 @@ public class ColliderConstraint extends Constraint {
         double massB = rigidBodyB.getMass();
         double sum = massA + massB;
         if (differ > 0) {
+            colliderA.setTriggered(true);
+            colliderB.setTriggered(true);
             Vector2 velocityA = transformA.getVelocity();
             Vector2 velocityB = transformB.getVelocity();
             Vector2 newVelocityA = velocityA.mul((massA - massB) / sum).add(velocityB.mul(2 * massB / sum));
