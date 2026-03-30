@@ -183,5 +183,10 @@ mvn test -Dtest=ConstraintValidationTest
   - 🔲 场景序列化 
   - 🔲 性能profiling工具
 
+## 示例
+- 物体约束:
+![img.png](ex_active.png)
+- 碰撞后几帧内，碰撞体圆将变色:
+![img_1.png](ex_collide.png)
 
 Physics Sandbox 是一个学习性质的游戏引擎项目，旨在探索2D物理模拟和游戏架构设计。
