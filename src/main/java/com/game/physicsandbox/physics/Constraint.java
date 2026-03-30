@@ -11,10 +11,13 @@ import com.game.physicsandbox.object.Component;
  */
 public abstract class Constraint extends Component {
     /**
-     * 对物体添加加速度以更新速度。
+     * 对约束做整理。
+     * 对物体添加加速度以更新速度，以及发布事件。
      * 由于约束成对，单个约束加速度将除以2。
      * @param currentTime 当前时间纳秒
      * @param deltaTime 时间增量纳秒
      */
-    public abstract void updateAcceleration(long currentTime, long deltaTime);
+    public abstract void finalize(long currentTime, long deltaTime);
+
+    public abstract Constraint getPair();
 }

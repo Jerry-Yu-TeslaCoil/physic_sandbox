@@ -1,5 +1,6 @@
 package com.game.physicsandbox.physics.component;
 
+import com.game.physicsandbox.event.EventBus;
 import com.game.physicsandbox.mechanism.UpdateLayer;
 import com.game.physicsandbox.mechanism.UpdateStage;
 import com.game.physicsandbox.object.component.Transform;
@@ -20,12 +21,22 @@ public class ColliderConstraint extends Constraint {
     @Getter
     private final Collider colliderB;
 
+    @Getter
+    private final ColliderConstraintIndex pair;
+
     private Vector2 accelerationA = Vector2.zero();
     private Vector2 accelerationB = Vector2.zero();
 
-    public ColliderConstraint(Collider colliderA, Collider colliderB) {
+    private final EventBus eventBus;
+
+    private boolean collided = false;
+
+    public ColliderConstraint(Collider colliderA, Collider colliderB, ColliderConstraintIndex pair,
+                              EventBus eventBus) {
         this.colliderA = colliderA;
         this.colliderB = colliderB;
+        this.pair = pair;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -46,12 +57,14 @@ public class ColliderConstraint extends Constraint {
         double massB = rigidBodyB.getMass();
         double sum = massA + massB;
         if (differ > 0) {
+            collided = true;
             colliderA.setTriggered(true);
             colliderB.setTriggered(true);
             Vector2 velocityA = transformA.getVelocity();
             Vector2 velocityB = transformB.getVelocity();
             Vector2 newVelocityA = velocityA.mul((massA - massB) / sum).add(velocityB.mul(2 * massB / sum));
             Vector2 newVelocityB = velocityA.mul(2 * massA / sum).add(velocityB.mul((massB - massA) / sum));
+
             accelerationA = newVelocityA.mul(1e9 / delta);
             accelerationB = newVelocityB.mul(1e9 / delta);
             double differA = differ * (massB / (massA + massB));
@@ -62,19 +75,25 @@ public class ColliderConstraint extends Constraint {
     }
 
     @Override
-    public void updateAcceleration(long currentTime, long deltaTime) {
+    public void finalize(long currentTime, long deltaTime) {
         Transform transformA = colliderA.getGameObject().getTransform();
         Transform transformB = colliderB.getGameObject().getTransform();
-        transformA.addAcceleration(accelerationA.mul(0.5));
-        transformB.addAcceleration(accelerationB.mul(0.5));
+        transformA.addAcceleration(accelerationA);
+        transformB.addAcceleration(accelerationB);
         accelerationA = Vector2.zero();
         accelerationB = Vector2.zero();
+        if (collided) {
+            eventBus.publish(new CollideEvent(colliderA, colliderB));
+        }
+        collided = false;
+
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ColliderConstraint that)) return false;
-        return Objects.equals(colliderA, that.colliderA) && Objects.equals(colliderB, that.colliderB);
+        return (Objects.equals(colliderA, that.colliderA) && Objects.equals(colliderB, that.colliderB)) ||
+                (Objects.equals(colliderA, that.colliderB) && Objects.equals(colliderB, that.colliderA));
     }
 
     @Override

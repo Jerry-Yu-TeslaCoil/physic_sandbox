@@ -19,6 +19,6 @@ public class ConstraintSolver extends ComponentExecutor {
      */
     public void updateAcceleration(long currentTime, long deltaTime) {
         components.stream().filter(component -> component instanceof Constraint)
-                .forEach(component -> ((Constraint) component).updateAcceleration(currentTime, deltaTime));
+                .forEach(component -> ((Constraint) component).finalize(currentTime, deltaTime));
     }
 }

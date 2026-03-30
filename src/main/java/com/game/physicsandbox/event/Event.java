@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public abstract class Event {
-    private long timestamp;
+    protected long timestamp;
 }

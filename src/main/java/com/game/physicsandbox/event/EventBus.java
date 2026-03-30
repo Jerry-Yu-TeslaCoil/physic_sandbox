@@ -38,6 +38,7 @@ public class EventBus extends ComponentExecutor {
      */
     public void publish(Event event, long timestamp) {
         event.setTimestamp(timestamp);
+        log.trace("Publishing event {}", event);
         synchronized (eventQueue) {
             eventQueue.add(event);
             eventQueue.sort(Comparator.comparingLong(Event::getTimestamp));

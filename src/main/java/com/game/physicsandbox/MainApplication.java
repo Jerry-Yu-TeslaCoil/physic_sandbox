@@ -1,11 +1,10 @@
 package com.game.physicsandbox;
 
 import com.game.physicsandbox.frame.FrameManager;
-import com.game.physicsandbox.lifecycle.LifeCycleManager;
 import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.object.GameObject;
 import com.game.physicsandbox.object.GameObjectFactory;
-import com.game.physicsandbox.object.component.Transform;
+import com.game.physicsandbox.physics.component.DistanceConstraint;
 import com.game.physicsandbox.physics.component.RigidBody;
 import com.game.physicsandbox.physics.component.RoundCollider;
 import com.game.physicsandbox.render.GraphicFrame;
@@ -27,15 +26,15 @@ public class MainApplication {
 
         double force = 20.0;
 
-        Component component1 = new TestComponent(force, "MainGameObject2");
+        Component component12 = new TestComponent(force, "MainGameObject2");
 
-        Component component2 = new TestComponent(force, "MainGameObject3");
+        Component component23 = new TestComponent(force, "MainGameObject3");
 
-        Component component3 = new TestComponent(force, "MainGameObject1");
+        Component component31 = new TestComponent(force, "MainGameObject1");
 
-        Component component12 = new TestComponent(force, "MainGameObject3");
+        Component component13 = new TestComponent(force, "MainGameObject3");
 
-        Component component22 = new TestComponent(force, "MainGameObject1");
+        Component component21 = new TestComponent(force, "MainGameObject1");
 
         Component component32 = new TestComponent(force, "MainGameObject2");
 
@@ -47,27 +46,30 @@ public class MainApplication {
         GameObject object2 = gameObjectFactory.create("MainGameObject2");
         GameObject object3 = gameObjectFactory.create("MainGameObject3");
 
-        object1.getTransform().setPosition(new Vector2(3, 0));
+        object1.getTransform().setPosition(new Vector2(15, 0));
         object1.addComponent(new RoundCollider(1));
         object1.addComponent(new RigidBody());
-        object1.addComponent(component1);
-        //object1.addComponent(component12);
+        object1.addComponent(component12);
+        object1.addComponent(component13);
         object1.addComponent(frame.createPanelRenderer());
 
-        object2.getTransform().setPosition(new Vector2(-3, 0));
+        object2.getTransform().setPosition(new Vector2(-30, 0));
         object2.addComponent(new RoundCollider(2));
         object2.addComponent(new RigidBody());
-        object2.addComponent(component2);
-        //object2.addComponent(component22);
+        object2.addComponent(component23);
+        object2.addComponent(component21);
         object2.addComponent(frame.createPanelRenderer());
 
-        object3.getTransform().setPosition(new Vector2(0, 3 * 1.732));
+        DistanceConstraint.create(object1, object2, 45);
+
+        object3.getTransform().setPosition(new Vector2(0, 30 * 1.732));
         object3.addComponent(new RoundCollider(3));
         object3.addComponent(new RigidBody());
-        object3.addComponent(component3);
-        //object3.addComponent(component32);
+        object3.addComponent(component31);
+        object3.addComponent(component32);
         object3.addComponent(frame.createPanelRenderer());
 
+        DistanceConstraint.create(object2, object3, 45);
 
         FrameManager manager = context.getBean(FrameManager.class);
         /*
@@ -96,8 +98,8 @@ class TestComponent extends Component {
     }
 
     @Override
-    public void addedToGameObject(GameObject gameObject) {
-        super.addedToGameObject(gameObject);
+    public void updateGameObjectStatus(GameObject gameObject) {
+        super.updateGameObjectStatus(gameObject);
         rigidBody = gameObject.getComponent(RigidBody.class);
         targetGameObject = gameObject.getLifeCycleManager().findGameObjects(target).get(0);
     }

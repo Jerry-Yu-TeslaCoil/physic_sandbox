@@ -4,6 +4,7 @@ import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.object.GameObject;
 import com.game.physicsandbox.object.component.Transform;
 import lombok.Getter;
+
 import java.util.List;
 
 /**
@@ -49,18 +50,25 @@ public class GameObjectProxy extends GameObject {
     @Override
     public void addComponent(Component component) {
         gameObject.addComponent(component);
-        component.addedToGameObject(this);
+        for (Component child : gameObject.getComponents()) {
+            child.updateGameObjectStatus(this);
+        }
     }
 
     @Override
     public void addComponentInstantly(Component component) {
         gameObject.addComponentInstantly(component);
-        component.addedToGameObject(this);
+        for (Component child : gameObject.getComponents()) {
+            child.updateGameObjectStatus(this);
+        }
     }
 
     @Override
     public void removeComponent(Component component) {
         gameObject.removeComponent(component);
+        for (Component child : gameObject.getComponents()) {
+            child.updateGameObjectStatus(this);
+        }
     }
 
     @Override

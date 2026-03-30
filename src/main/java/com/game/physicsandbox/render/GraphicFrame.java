@@ -227,8 +227,10 @@ public class GraphicFrame extends JFrame {
             // 绘制缩放比例提示
             drawZoomInfo(g2d);
 
+            List<Circle> snapshot = new ArrayList<>(circles);
+
             // 绘制所有圆
-            for (Circle circle : circles) {
+            for (Circle circle : snapshot) {
                 drawCircle(g2d, circle);
             }
         }

@@ -25,7 +25,11 @@ public abstract class Component {
      */
     public abstract void update(long currentTime, long delta);
 
-    public void addedToGameObject(GameObject gameObject) {
+    /**
+     * 元素或组件发生改变时调用，用于查找元素和组件。
+     * @param gameObject 挂载的元素
+     */
+    public void updateGameObjectStatus(GameObject gameObject) {
         this.gameObject = gameObject;
     }
 }

@@ -40,16 +40,16 @@ public class GameObject {
 
     public void addComponent(Component component) {
         if (!componentList.contains(component) && component.getGameObject() == null) {
-            component.addedToGameObject(this);
             componentList.add(component);
+            componentList.forEach(listener -> listener.updateGameObjectStatus(this));
             lifeCycleManager.slowRegisterToExecutor(component);
         }
     }
 
     public void addComponentInstantly(Component component) {
         if (!componentList.contains(component) && component.getGameObject() == null) {
-            component.addedToGameObject(this);
             componentList.add(component);
+            componentList.forEach(listener -> listener.updateGameObjectStatus(this));
             lifeCycleManager.quickRegisterToExecutor(component);
         }
     }
@@ -60,6 +60,7 @@ public class GameObject {
             componentList.remove(component);
             lifeCycleManager.slowUnregisterFromExecutor(component);
         }
+        componentList.forEach(child -> child.updateGameObjectStatus(this));
     }
 
     public <T extends Component> T getComponent(Class<T> componentType) {

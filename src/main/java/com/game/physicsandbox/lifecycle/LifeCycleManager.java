@@ -129,6 +129,7 @@ public class LifeCycleManager extends ComponentExecutor {
         this.gameObjects.add(gameObjectProxy);
         Transform transform = gameObject.getTransform();
         registerToExecutor(transform);
+        transform.updateGameObjectStatus(gameObjectProxy);
         return gameObjectProxy;
     }
 

@@ -1,10 +1,9 @@
 package com.game.physicsandbox.physics;
 
-import com.game.physicsandbox.lifecycle.LifeCycleManager;
+import com.game.physicsandbox.event.EventBus;
 import com.game.physicsandbox.mechanism.ComponentExecutor;
-import com.game.physicsandbox.object.Component;
-import com.game.physicsandbox.object.component.Transform;
 import com.game.physicsandbox.physics.component.ColliderConstraint;
+import com.game.physicsandbox.physics.component.ColliderConstraintIndex;
 import com.game.physicsandbox.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,11 @@ public class ColliderAnalyzer extends ComponentExecutor {
 
     private final List<ColliderConstraint> constraintRecord  = new ArrayList<>();
 
-    public ColliderAnalyzer() {
+    private final EventBus eventBus;
+
+    @Autowired
+    public ColliderAnalyzer(EventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     public List<ColliderConstraint> getConstraintRecord() {
@@ -35,7 +38,9 @@ public class ColliderAnalyzer extends ComponentExecutor {
 
     public void cleanConstraintRecord() {
         components.stream().filter(component -> component instanceof Collider)
-                .forEach(component -> ((Collider) component).setTriggered(false));
+                .forEach(component -> {
+                    ((Collider) component).setTriggered(false);
+                });
         constraintRecord.clear();
     }
 
@@ -73,10 +78,15 @@ public class ColliderAnalyzer extends ComponentExecutor {
 
                     colliders.forEach(other -> {
                         if (!entry.getValue().equals(other.getValue())) {
-                            ColliderConstraint constraint = new ColliderConstraint(entry.getValue(), other.getValue());
+                            ColliderConstraintIndex pair = new ColliderConstraintIndex();
+                            pair.setAutoDispose(true);
+                            ColliderConstraint constraint =
+                                    new ColliderConstraint(entry.getValue(), other.getValue(), pair, eventBus);
+                            pair.setPair(constraint);
                             constraint.setAutoDispose(true);
                             if (!constraintRecord.contains(constraint)) {
                                 entry.getValue().getGameObject().addComponentInstantly(constraint);
+                                other.getValue().getGameObject().addComponentInstantly(pair);
                                 constraintRecord.add(constraint);
                             }
                         }
