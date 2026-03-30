@@ -67,7 +67,7 @@ public class Transform extends Component {
     public void setPosition(Vector2 position, PositionSetStrategy strategy) {
         switch (strategy) {
             case CLEAN_SPEED -> this.positionRecord = position;
-            case HOLD_SPEED -> this.positionRecord.add(position.sub(this.position));
+            case HOLD_SPEED -> this.positionRecord = this.positionRecord.add(position.sub(this.position));
             default -> {}
         }
         this.position = position;

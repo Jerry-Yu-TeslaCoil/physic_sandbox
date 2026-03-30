@@ -1,6 +1,7 @@
 package com.game.physicsandbox.render;
 
 import com.game.physicsandbox.mechanism.ComponentExecutor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,4 +10,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Renderer extends ComponentExecutor {
+
+    private final Refreshable frame;
+
+    @Autowired
+    public Renderer(Refreshable frame) {
+        this.frame = frame;
+    }
+
+    @Override
+    public void update(long currentTime, long deltaTime) {
+        super.update(currentTime, deltaTime);
+        frame.refreshFrame();
+    }
 }

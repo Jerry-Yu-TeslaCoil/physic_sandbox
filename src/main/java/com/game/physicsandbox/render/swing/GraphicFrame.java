@@ -1,10 +1,10 @@
-package com.game.physicsandbox.render;
+package com.game.physicsandbox.render.swing;
 
-import com.game.physicsandbox.mechanism.UpdateLayer;
-import com.game.physicsandbox.mechanism.UpdateStage;
-import com.game.physicsandbox.physics.component.RoundCollider;
-import com.game.physicsandbox.util.Vector2;
+import com.game.physicsandbox.render.Circle;
+import com.game.physicsandbox.render.Line;
+import com.game.physicsandbox.render.Refreshable;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +20,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class GraphicFrame extends JFrame {
+public class GraphicFrame extends JFrame implements Refreshable {
 
     private final List<Circle> circles = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
     private final DrawingPanel drawingPanel;
 
-    @Getter
-    private int centerRadius = 2;
     @Getter
     private int scaleFactor = 15; // 缩放因子
     private int xOffset = 400;
@@ -39,6 +38,7 @@ public class GraphicFrame extends JFrame {
     private static final int MAX_SCALE_FACTOR = 50;
     private static final float ZOOM_STEP = 1.2f; // 每次缩放的比例因子
 
+    @Getter
     private final int DELAY_TRIGGERED_COLOR_FRAME;
 
     @Autowired
@@ -48,6 +48,14 @@ public class GraphicFrame extends JFrame {
         initUI();
         initDragListener();
         initZoomListener();
+    }
+
+    /**
+     * 刷新绘制
+     */
+    @Override
+    public void refreshFrame() {
+        this.refresh();
     }
 
     private void initUI() {
@@ -90,9 +98,6 @@ public class GraphicFrame extends JFrame {
                     yOffset += deltaY;
 
                     lastDragPoint = e.getPoint();
-
-                    // 触发重绘
-                    refresh();
                 }
             }
         });
@@ -119,30 +124,45 @@ public class GraphicFrame extends JFrame {
                 // 调整偏移量，使鼠标指向的世界坐标位置保持不变
                 xOffset = (int) (mousePos.x - worldXBefore * scaleFactor);
                 yOffset = (int) (mousePos.y - worldYBefore * scaleFactor);
-
-                // 触发重绘
-                refresh();
             }
         });
     }
 
+    public void removeGraphic(com.game.physicsandbox.object.Component component) {
+        List<Circle> removed = circles.stream().filter(circle -> circle.getCreator() == component).toList();
+        circles.removeAll(removed);
+    }
+
     public void addCircle(Circle circle) {
-        circles.add(circle);
-        drawingPanel.repaint(); // 触发重绘
+        if (!circles.contains(circle)) {
+            circles.add(circle);
+        }
     }
 
     public void removeCircle(Circle circle) {
         circles.remove(circle);
-        drawingPanel.repaint(); // 触发重绘
     }
 
     public void clearCircles() {
         circles.clear();
-        drawingPanel.repaint(); // 触发重绘
+    }
+
+    public void addLine(Line line) {
+        if (!lines.contains(line)) {
+            lines.add(line);
+        }
+    }
+
+    public void removeLine(Line line) {
+        lines.remove(line);
+    }
+
+    public void clearLines() {
+        lines.clear();
     }
 
     public void refresh() {
-        drawingPanel.repaint(); // 手动刷新
+        drawingPanel.repaint();
     }
 
     public JPanelRenderer createPanelRenderer() {
@@ -156,7 +176,6 @@ public class GraphicFrame extends JFrame {
 
     public void setXOffset(int xOffset) {
         this.xOffset = xOffset;
-        refresh();
     }
 
     public int getYOffset() {
@@ -165,20 +184,13 @@ public class GraphicFrame extends JFrame {
 
     public void setYOffset(int yOffset) {
         this.yOffset = yOffset;
-        refresh();
     }
 
     public void setScaleFactor(int scaleFactor) {
         // 限制缩放范围
         if (scaleFactor >= MIN_SCALE_FACTOR && scaleFactor <= MAX_SCALE_FACTOR) {
             this.scaleFactor = scaleFactor;
-            refresh();
         }
-    }
-
-    public void setCenterRadius(int centerRadius) {
-        this.centerRadius = centerRadius;
-        refresh();
     }
 
     /**
@@ -188,7 +200,6 @@ public class GraphicFrame extends JFrame {
         scaleFactor = 15;
         xOffset = 400;
         yOffset = 300;
-        refresh();
     }
 
     /**
@@ -302,9 +313,9 @@ public class GraphicFrame extends JFrame {
             if (circle == null) return;
 
             // 计算外接矩形左上角坐标
-            int x = circle.getCenterX() - circle.getRadius();
-            int y = circle.getCenterY() - circle.getRadius();
-            int diameter = circle.getRadius() * 2;
+            int x = circle.getCenterX(scaleFactor, xOffset) - circle.getRadius(scaleFactor);
+            int y = circle.getCenterY(scaleFactor, yOffset) - circle.getRadius(scaleFactor);
+            int diameter = circle.getRadius(scaleFactor) * 2;
 
             // 设置颜色
             g2d.setColor(circle.getColor());
@@ -319,83 +330,4 @@ public class GraphicFrame extends JFrame {
         }
     }
 
-    /**
-     * 渲染器组件类
-     */
-    @UpdateLayer(UpdateStage.RENDER)
-    public static class JPanelRenderer extends com.game.physicsandbox.object.Component {
-        private final Circle centerCircle;
-        private final Circle colliderCircle;
-        private final GraphicFrame frame;
-
-        private int delayCounter;
-
-        // 定义不同状态的颜色
-        private static final Color TRIGGER_COLOR = Color.BLUE;      // trigger为true时的颜色
-        private static final Color NON_TRIGGER_COLOR = Color.BLACK;  // trigger为false时的颜色
-        private static final Color CENTER_COLOR = Color.BLUE;        // 中心圆颜色
-
-        protected JPanelRenderer(GraphicFrame frame) {
-            this.frame = frame;
-            centerCircle = new Circle();
-            colliderCircle = new Circle();
-            centerCircle.setFilled(true);
-            centerCircle.setColor(CENTER_COLOR);
-            colliderCircle.setFilled(false);
-            colliderCircle.setColor(NON_TRIGGER_COLOR); // 初始颜色为黑色
-            frame.addCircle(centerCircle);
-            frame.addCircle(colliderCircle);
-        }
-
-        @Override
-        public void update(long currentTime, long delta) {
-            if (gameObject != null) {
-                // 更新中心圆（实心圆点）
-                Vector2 center = gameObject.getTransform().getPosition();
-                centerCircle.setCenterX((int) (center.x() * frame.getScaleFactor()) + frame.getXOffset());
-                centerCircle.setCenterY((int) (center.y() * frame.getScaleFactor()) + frame.getYOffset());
-                centerCircle.setRadius(frame.getCenterRadius());
-
-                // 更新碰撞器圆（空心圆）
-                RoundCollider collider = gameObject.getComponent(RoundCollider.class);
-                if (collider != null) {
-                    Vector2 colliderPosition = collider.getWorldPosition();
-                    colliderCircle.setCenterX((int) (colliderPosition.x() * frame.getScaleFactor()) + frame.getXOffset());
-                    colliderCircle.setCenterY((int) (colliderPosition.y() * frame.getScaleFactor()) + frame.getYOffset());
-                    colliderCircle.setRadius((int) (collider.getRadius() * frame.getScaleFactor()));
-
-                    // 根据 trigger 状态设置碰撞器圆圈颜色
-                    if (collider.isTriggered()) {
-                        delayCounter = frame.DELAY_TRIGGERED_COLOR_FRAME;
-                        colliderCircle.setColor(TRIGGER_COLOR);
-                    } else {
-                        delayCounter--;
-                        if (delayCounter <= 0) {
-                            colliderCircle.setColor(NON_TRIGGER_COLOR);
-                        }
-                    }
-                }
-
-                // 触发重绘
-                frame.refresh();
-            }
-        }
-
-        /**
-         * 设置缩放因子
-         */
-        public void setScaleFactor(int scaleFactor) {
-            frame.setScaleFactor(scaleFactor);
-        }
-
-        /**
-         * 移除渲染的圆
-         */
-        public void remove() {
-            if (frame != null) {
-                frame.removeCircle(centerCircle);
-                frame.removeCircle(colliderCircle);
-            }
-        }
-    }
 }

@@ -67,6 +67,7 @@ public class ColliderConstraint extends Constraint {
 
             accelerationA = newVelocityA.mul(1e9 / delta);
             accelerationB = newVelocityB.mul(1e9 / delta);
+
             double differA = differ * (massB / (massA + massB));
             double differB = differ * (massA / (massA + massB));
             transformA.setPosition(transformA.getPosition().add(vectorA2B.negate().mul(differA)));

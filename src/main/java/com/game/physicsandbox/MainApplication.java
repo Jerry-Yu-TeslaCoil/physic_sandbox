@@ -7,7 +7,7 @@ import com.game.physicsandbox.object.GameObjectFactory;
 import com.game.physicsandbox.physics.component.DistanceConstraint;
 import com.game.physicsandbox.physics.component.RigidBody;
 import com.game.physicsandbox.physics.component.RoundCollider;
-import com.game.physicsandbox.render.GraphicFrame;
+import com.game.physicsandbox.render.swing.GraphicFrame;
 import com.game.physicsandbox.util.Vector2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.WebApplicationType;
@@ -46,7 +46,7 @@ public class MainApplication {
         GameObject object2 = gameObjectFactory.create("MainGameObject2");
         GameObject object3 = gameObjectFactory.create("MainGameObject3");
 
-        object1.getTransform().setPosition(new Vector2(15, 0));
+        object1.getTransform().setPosition(new Vector2(30, 0));
         object1.addComponent(new RoundCollider(1));
         object1.addComponent(new RigidBody());
         object1.addComponent(component12);
@@ -60,7 +60,7 @@ public class MainApplication {
         object2.addComponent(component21);
         object2.addComponent(frame.createPanelRenderer());
 
-        DistanceConstraint.create(object1, object2, 45);
+        DistanceConstraint.create(object1, object2, 60);
 
         object3.getTransform().setPosition(new Vector2(0, 30 * 1.732));
         object3.addComponent(new RoundCollider(3));
@@ -69,7 +69,7 @@ public class MainApplication {
         object3.addComponent(component32);
         object3.addComponent(frame.createPanelRenderer());
 
-        DistanceConstraint.create(object2, object3, 45);
+        DistanceConstraint.create(object2, object3, 60);
 
         FrameManager manager = context.getBean(FrameManager.class);
         /*

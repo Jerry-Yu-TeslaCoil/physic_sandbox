@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @UpdateLayer(UpdateStage.CONSTRAINT)
 public class DistanceConstraint extends Constraint {
+    @Getter
     private final Transform transformA;
+    @Getter
     private final Transform transformB;
     private final double distance;
 
@@ -58,8 +60,8 @@ public class DistanceConstraint extends Constraint {
 
             Vector2 differenceA = differA2B.mul(differ * (massB / sum));
             Vector2 differenceB = differA2B.negate().mul(differ * (massA / sum));
-            transformA.setPosition(transformA.getPosition().add(differenceA), Transform.PositionSetStrategy.HOLD_SPEED);
-            transformB.setPosition(transformB.getPosition().add(differenceB), Transform.PositionSetStrategy.HOLD_SPEED);
+            transformA.setPosition(transformA.getPosition().add(differenceA), Transform.PositionSetStrategy.POSITION_ONLY);
+            transformB.setPosition(transformB.getPosition().add(differenceB), Transform.PositionSetStrategy.POSITION_ONLY);
         }
     }
 
