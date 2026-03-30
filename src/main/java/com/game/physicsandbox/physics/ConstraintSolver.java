@@ -11,4 +11,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ConstraintSolver extends ComponentExecutor {
+
+    /**
+     * 在约束位置迭代求解完毕后调用。为物体更新速度。
+     * @param currentTime 当前时间纳秒
+     * @param deltaTime 时间增量纳秒
+     */
+    public void updateAcceleration(long currentTime, long deltaTime) {
+        components.stream().filter(component -> component instanceof Constraint)
+                .forEach(component -> ((Constraint) component).updateAcceleration(currentTime, deltaTime));
+    }
 }

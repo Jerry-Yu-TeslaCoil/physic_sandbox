@@ -48,39 +48,39 @@ public class CalculateFrame {
      */
     public void update(long currentTime, long deltaTime) {
 
-        log.trace("Calculate frame time: from {} to {}", currentTime - deltaTime, currentTime);
-        log.trace("Fixed time gap: {}ns", currentTime - deltaTime);
-        log.trace("Set fixed time gap: {}ns", deltaTime);
+        //log.trace("Calculate frame time: from {} to {}", currentTime - deltaTime, currentTime);
+        //log.trace("Fixed time gap: {}ns", currentTime - deltaTime);
+        //log.trace("Set fixed time gap: {}ns", deltaTime);
 
         lifeCycleManager.stageSwift(UpdateStage.CLEAN);
 
         //更新生命周期管理器
         lifeCycleManager.update(currentTime, deltaTime);
-        log.trace("Update LifeCycleManager: {}ns", deltaTime);
+        //log.trace("Update LifeCycleManager: {}ns", deltaTime);
 
         lifeCycleManager.stageSwift(UpdateStage.EVENT);
 
         //更新事件总线
         eventBus.update(currentTime, deltaTime);
-        log.trace("Update EventBus: {}ns", currentTime);
+        //log.trace("Update EventBus: {}ns", currentTime);
 
         lifeCycleManager.stageSwift(UpdateStage.COMPONENTS);
 
         //更新组件更新器
         componentUpdater.update(currentTime, deltaTime);
-        log.trace("Update ComponentUpdater: {}ns", currentTime);
+        //log.trace("Update ComponentUpdater: {}ns", currentTime);
 
         lifeCycleManager.stageSwift(UpdateStage.PHYSICS);
 
         //更新物理分析器
         this.physicAnalyzer.update(currentTime, deltaTime);
-        log.trace("Update PhysicAnalyzer: {}ns", currentTime);
+        //log.trace("Update PhysicAnalyzer: {}ns", currentTime);
 
         lifeCycleManager.stageSwift(UpdateStage.UPDATE);
 
         //更新物理更新器
         this.physicUpdater.update(currentTime, deltaTime);
-        log.trace("Update PhysicUpdater: {}ns", currentTime);
+        //log.trace("Update PhysicUpdater: {}ns", currentTime);
 
         for (int iterateTime = 0; iterateTime < CONSTRAINT_ITERATE_TIME; iterateTime++) {
 
@@ -88,13 +88,19 @@ public class CalculateFrame {
 
             //更新碰撞分析器
             colliderAnalyzer.update(currentTime, deltaTime);
-            log.trace("Update ColliderAnalyzer: {}ns", currentTime);
+            //log.trace("Update ColliderAnalyzer: {}ns", currentTime);
+
+            //注册到约束求解器
+            colliderAnalyzer.getConstraintRecord().forEach(lifeCycleManager::quickRegisterToExecutor);
+            //log.trace("Register To ConstraintSolver: {}ns", currentTime);
 
             lifeCycleManager.stageSwift(UpdateStage.CONSTRAINT);
 
             //更新约束求解器
             constraintSolver.update(currentTime, deltaTime);
-            log.trace("Update ConstraintSolver: {}ns", currentTime);
+            //log.trace("Update ConstraintSolver: {}ns", currentTime);
         }
+        //更新约束求解器的加速度到物体Transform
+        constraintSolver.updateAcceleration(deltaTime, currentTime);
     }
 }

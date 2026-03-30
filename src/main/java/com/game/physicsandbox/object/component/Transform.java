@@ -6,16 +6,18 @@ import com.game.physicsandbox.object.Component;
 import com.game.physicsandbox.util.Vector2;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 物体基本运动组件。存储位置并更新物体位移。
  * 使用Verlet积分执行:
  * x2 = 2x1 - x0 + at^2
  */
+@Slf4j
 @UpdateLayer(UpdateStage.UPDATE)
 public class Transform extends Component {
     @Getter
-    private Vector2 position;
+    private Vector2 position = Vector2.zero();
 
     /**
      * -- SETTER --
@@ -24,11 +26,14 @@ public class Transform extends Component {
      * 用于自定义情况。
      */
     @Setter
-    private Vector2 positionRecord;
+    private Vector2 positionRecord = Vector2.zero();
 
     @Setter
     @Getter
     private Vector2 acceleration = Vector2.zero();
+
+    @Getter
+    private Vector2 velocity = Vector2.zero();
 
     /**
      * 为物体此帧添加加速度。用于组件位置更新。
@@ -36,7 +41,14 @@ public class Transform extends Component {
      * @param acceleration 此帧的加速度
      */
     public void addAcceleration(Vector2 acceleration) {
-        this.acceleration.add(acceleration);
+        this.acceleration = this.acceleration.add(acceleration);
+    }
+
+    /**
+     * 清空物体的加速度。
+     */
+    public void clearAcceleration() {
+        this.acceleration = Vector2.zero();
     }
 
     /**
@@ -69,11 +81,14 @@ public class Transform extends Component {
      */
     @Override
     public void update(long currentTime, long deltaTime) {
+        double deltaTimeSeconds = deltaTime * 1e-9;
+
         Vector2 newPosition = position.mul(2)
                 .sub(positionRecord)
-                .add(acceleration.mul(deltaTime * deltaTime));
+                .add(acceleration.mul(deltaTimeSeconds * deltaTimeSeconds));
         positionRecord = position;
         position = newPosition;
+        velocity = position.sub(positionRecord).mul(1 / deltaTimeSeconds);
         acceleration = Vector2.zero();
     }
 

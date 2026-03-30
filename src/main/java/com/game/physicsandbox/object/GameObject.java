@@ -24,6 +24,7 @@ public class GameObject {
     @Getter
     private final boolean destroyed = false;
 
+    @Getter
     protected final LifeCycleManager lifeCycleManager;
 
     /**
@@ -42,6 +43,14 @@ public class GameObject {
             component.setGameObject(this);
             componentList.add(component);
             lifeCycleManager.slowRegisterToExecutor(component);
+        }
+    }
+
+    public void addComponentInstantly(Component component) {
+        if (!componentList.contains(component) && component.getGameObject() == null) {
+            component.setGameObject(this);
+            componentList.add(component);
+            lifeCycleManager.quickRegisterToExecutor(component);
         }
     }
 

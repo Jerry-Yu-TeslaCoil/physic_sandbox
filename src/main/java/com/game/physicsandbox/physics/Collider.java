@@ -17,7 +17,8 @@ import lombok.Setter;
 @Getter
 public abstract class Collider extends Component {
 
-    protected Vector2 centerRelativePosition;
+    protected Vector2 centerRelativePosition = Vector2.zero();
+    protected double detectionRadius = 1.0;
 
     /**
      * 获得碰撞体在某个方向的边界与中心点距离。
@@ -25,6 +26,14 @@ public abstract class Collider extends Component {
      * @return 此方向下边界与中心的距离
      */
     public abstract double boundaryDistance(Vector2 vector);
+
+    /**
+     * 快捷获得碰撞体中心的世界坐标。
+     * @return 碰撞体中心世界坐标
+     */
+    public Vector2 getWorldPosition() {
+        return this.getGameObject().getTransform().getPosition().add(centerRelativePosition);
+    }
 
     @Override
     public void update(long currentTime, long delta) {

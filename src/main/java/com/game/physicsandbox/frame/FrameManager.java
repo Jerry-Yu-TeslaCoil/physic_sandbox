@@ -60,7 +60,7 @@ public class FrameManager {
 
             lifeCycleManager.stageSwift(UpdateStage.RENDER);
 
-            log.trace("Render frame time: {}ns", currentNanoTime);
+            //log.trace("Render frame time: {}ns", currentNanoTime);
             renderer.update(currentNanoTime, NANO_SECOND_PER_CALCULATE_FRAMES);
 
             lastNanoTime = currentNanoTime;

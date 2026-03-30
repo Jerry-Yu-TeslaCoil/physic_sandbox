@@ -53,6 +53,12 @@ public class GameObjectProxy extends GameObject {
     }
 
     @Override
+    public void addComponentInstantly(Component component) {
+        gameObject.addComponentInstantly(component);
+        component.setGameObject(this);
+    }
+
+    @Override
     public void removeComponent(Component component) {
         gameObject.removeComponent(component);
     }

@@ -222,7 +222,11 @@ public class LifeCycleManager extends ComponentExecutor {
         //取消引用自销毁组件
         this.managementList.forEach(component -> {
             if (component.isAutoDispose()) {
-                component.getGameObject().removeComponent(component);
+                if (component.getGameObject() != null) {
+                    component.getGameObject().removeComponent(component);
+                } else {
+                    slowUnregisterFromExecutor(component);
+                }
             }
         });
         //延时注销
