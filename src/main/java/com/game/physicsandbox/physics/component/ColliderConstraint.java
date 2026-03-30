@@ -6,10 +6,12 @@ import com.game.physicsandbox.mechanism.UpdateStage;
 import com.game.physicsandbox.object.component.Transform;
 import com.game.physicsandbox.physics.Collider;
 import com.game.physicsandbox.physics.Constraint;
+import com.game.physicsandbox.render.Line;
 import com.game.physicsandbox.util.Vector2;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.*;
 import java.util.Objects;
 
 @Slf4j
@@ -27,6 +29,9 @@ public class ColliderConstraint extends Constraint {
     private Vector2 accelerationA = Vector2.zero();
     private Vector2 accelerationB = Vector2.zero();
 
+    RigidBody rigidBodyA;
+    RigidBody rigidBodyB;
+
     private final EventBus eventBus;
 
     private boolean collided = false;
@@ -37,12 +42,12 @@ public class ColliderConstraint extends Constraint {
         this.colliderB = colliderB;
         this.pair = pair;
         this.eventBus = eventBus;
+        rigidBodyA = colliderA.getGameObject().getComponent(RigidBody.class);
+        rigidBodyB = colliderB.getGameObject().getComponent(RigidBody.class);
     }
 
     @Override
     public void update(long currentTime, long delta) {
-        RigidBody rigidBodyA = colliderA.getGameObject().getComponent(RigidBody.class);
-        RigidBody rigidBodyB = colliderB.getGameObject().getComponent(RigidBody.class);
         if (rigidBodyA == null || rigidBodyB == null) {
             return;
         }
@@ -65,22 +70,32 @@ public class ColliderConstraint extends Constraint {
             Vector2 newVelocityA = velocityA.mul((massA - massB) / sum).add(velocityB.mul(2 * massB / sum));
             Vector2 newVelocityB = velocityA.mul(2 * massA / sum).add(velocityB.mul((massB - massA) / sum));
 
-            accelerationA = newVelocityA.mul(1e9 / delta);
-            accelerationB = newVelocityB.mul(1e9 / delta);
-
             double differA = differ * (massB / (massA + massB));
             double differB = differ * (massA / (massA + massB));
-            transformA.setPosition(transformA.getPosition().add(vectorA2B.negate().mul(differA)));
-            transformB.setPosition(transformB.getPosition().add(vectorA2B.mul(differB)));
+            if (!rigidBodyA.isKinematic()) {
+                accelerationA = newVelocityA.mul(1e9 / delta);
+                transformA.setPosition(transformA.getPosition().add(vectorA2B.negate().mul(differA)));
+            }
+            if (!rigidBodyB.isKinematic()) {
+                accelerationB = newVelocityB.mul(1e9 / delta);
+                transformB.setPosition(transformB.getPosition().add(vectorA2B.mul(differB)));
+            }
         }
     }
 
     @Override
     public void finalize(long currentTime, long deltaTime) {
+        if (rigidBodyA == null || rigidBodyB == null) {
+            return;
+        }
         Transform transformA = colliderA.getGameObject().getTransform();
         Transform transformB = colliderB.getGameObject().getTransform();
-        transformA.addAcceleration(accelerationA);
-        transformB.addAcceleration(accelerationB);
+        if (!rigidBodyA.isKinematic()) {
+            transformA.addAcceleration(accelerationA);
+        }
+        if (!rigidBodyB.isKinematic()) {
+            transformB.addAcceleration(accelerationB);
+        }
         accelerationA = Vector2.zero();
         accelerationB = Vector2.zero();
         if (collided) {

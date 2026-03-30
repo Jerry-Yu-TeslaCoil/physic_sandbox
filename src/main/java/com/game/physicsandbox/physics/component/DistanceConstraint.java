@@ -34,8 +34,8 @@ public class DistanceConstraint extends Constraint {
     @Override
     public void updateGameObjectStatus(GameObject gameObject) {
         super.updateGameObjectStatus(gameObject);
-        rigidBodyA = gameObject.getComponent(RigidBody.class);
-        rigidBodyB = gameObject.getComponent(RigidBody.class);
+        rigidBodyA = transformA.getGameObject().getComponent(RigidBody.class);
+        rigidBodyB = transformB.getGameObject().getComponent(RigidBody.class);
     }
 
     @Override
@@ -60,8 +60,12 @@ public class DistanceConstraint extends Constraint {
 
             Vector2 differenceA = differA2B.mul(differ * (massB / sum));
             Vector2 differenceB = differA2B.negate().mul(differ * (massA / sum));
-            transformA.setPosition(transformA.getPosition().add(differenceA), Transform.PositionSetStrategy.POSITION_ONLY);
-            transformB.setPosition(transformB.getPosition().add(differenceB), Transform.PositionSetStrategy.POSITION_ONLY);
+            if (!rigidBodyA.isKinematic()) {
+                transformA.setPosition(transformA.getPosition().add(differenceA), Transform.PositionSetStrategy.POSITION_ONLY);
+            }
+            if (!rigidBodyB.isKinematic()) {
+                transformB.setPosition(transformB.getPosition().add(differenceB), Transform.PositionSetStrategy.POSITION_ONLY);
+            }
         }
     }
 

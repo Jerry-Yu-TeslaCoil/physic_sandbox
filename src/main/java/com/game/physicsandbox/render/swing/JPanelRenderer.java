@@ -5,6 +5,7 @@ import com.game.physicsandbox.mechanism.UpdateStage;
 import com.game.physicsandbox.object.GameObject;
 import com.game.physicsandbox.physics.component.DistanceConstraint;
 import com.game.physicsandbox.physics.component.RoundCollider;
+import com.game.physicsandbox.render.Line;
 import com.game.physicsandbox.render.objects.ConstraintLine;
 import com.game.physicsandbox.render.objects.CenterCircle;
 import com.game.physicsandbox.render.objects.ColliderCircle;
@@ -22,14 +23,13 @@ public class JPanelRenderer extends com.game.physicsandbox.object.Component {
     private final ColliderCircle colliderCircle;
     private final GraphicFrame frame;
 
-    private RoundCollider collider;
-    private final List<ConstraintLine> lines = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
 
     private int delayCounter;
 
     // 定义不同状态的颜色
-    private static final Color TRIGGER_COLOR = Color.BLUE;      // trigger为true时的颜色
-    private static final Color NON_TRIGGER_COLOR = Color.BLACK;  // trigger为false时的颜色
+    private static final Color TRIGGERED_COLOR = Color.RED;      // trigger为true时的颜色
+    private static final Color NON_TRIGGERED_COLOR = Color.BLACK;  // trigger为false时的颜色
     private static final Color CENTER_COLOR = Color.BLUE;        // 中心圆颜色
 
     protected JPanelRenderer(GraphicFrame frame) {
@@ -41,9 +41,9 @@ public class JPanelRenderer extends com.game.physicsandbox.object.Component {
 
         colliderCircle = new ColliderCircle();
         colliderCircle.setCreator(this);
-        colliderCircle.setColor(NON_TRIGGER_COLOR); // 初始颜色为黑色
-        colliderCircle.setTriggeredColor(TRIGGER_COLOR);
-        colliderCircle.setUntriggeredColor(NON_TRIGGER_COLOR);
+        colliderCircle.setColor(NON_TRIGGERED_COLOR); // 初始颜色为黑色
+        colliderCircle.setTriggeredColor(TRIGGERED_COLOR);
+        colliderCircle.setUntriggeredColor(NON_TRIGGERED_COLOR);
         colliderCircle.setDelayTriggeredColorFrame(frame.getDELAY_TRIGGERED_COLOR_FRAME());
     }
 
@@ -53,7 +53,7 @@ public class JPanelRenderer extends com.game.physicsandbox.object.Component {
         super.updateGameObjectStatus(gameObject);
         centerCircle.setTransform(gameObject.getTransform());
         frame.addCircle(centerCircle);
-        collider = gameObject.getComponent(RoundCollider.class);
+        RoundCollider collider = gameObject.getComponent(RoundCollider.class);
         if (collider != null) {
             colliderCircle.setCollider(collider);
             frame.addCircle(colliderCircle);
@@ -69,27 +69,14 @@ public class JPanelRenderer extends com.game.physicsandbox.object.Component {
                 lines.add(line);
             }
         }
+
+        for (Line line : lines) {
+            frame.addLine(line);
+        }
     }
 
     @Override
     public void update(long currentTime, long delta) {
         colliderCircle.updateColliderState();
-    }
-
-    /**
-     * 设置缩放因子
-     */
-    public void setScaleFactor(int scaleFactor) {
-        frame.setScaleFactor(scaleFactor);
-    }
-
-    /**
-     * 移除渲染的圆
-     */
-    public void remove() {
-        if (frame != null) {
-            frame.removeCircle(centerCircle);
-            frame.removeCircle(colliderCircle);
-        }
     }
 }

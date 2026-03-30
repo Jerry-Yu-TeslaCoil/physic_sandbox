@@ -55,7 +55,9 @@ public class MainApplication {
 
         object2.getTransform().setPosition(new Vector2(-30, 0));
         object2.addComponent(new RoundCollider(2));
-        object2.addComponent(new RigidBody());
+        RigidBody rigidBody2 = new RigidBody();
+        rigidBody2.setKinematic(true);
+        object2.addComponent(rigidBody2);
         object2.addComponent(component23);
         object2.addComponent(component21);
         object2.addComponent(frame.createPanelRenderer());
@@ -64,7 +66,10 @@ public class MainApplication {
 
         object3.getTransform().setPosition(new Vector2(0, 30 * 1.732));
         object3.addComponent(new RoundCollider(3));
-        object3.addComponent(new RigidBody());
+        RigidBody rigidBody3 = new RigidBody();
+        rigidBody3.setGravity(true);
+        rigidBody3.setKinematic(true);
+        object3.addComponent(rigidBody3);
         object3.addComponent(component31);
         object3.addComponent(component32);
         object3.addComponent(frame.createPanelRenderer());
@@ -72,16 +77,6 @@ public class MainApplication {
         DistanceConstraint.create(object2, object3, 60);
 
         FrameManager manager = context.getBean(FrameManager.class);
-        /*
-        new Thread(() -> {
-            try {
-                Thread.sleep(6000);
-                manager.setRunning(false);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
-        */
         manager.run();
     }
 }

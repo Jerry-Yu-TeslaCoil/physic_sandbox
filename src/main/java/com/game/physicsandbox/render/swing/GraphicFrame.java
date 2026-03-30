@@ -4,7 +4,6 @@ import com.game.physicsandbox.render.Circle;
 import com.game.physicsandbox.render.Line;
 import com.game.physicsandbox.render.Refreshable;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,15 +26,15 @@ public class GraphicFrame extends JFrame implements Refreshable {
     private final DrawingPanel drawingPanel;
 
     @Getter
-    private int scaleFactor = 15; // 缩放因子
+    private double scaleFactor = 15; // 缩放因子
     private int xOffset = 400;
     private int yOffset = 300;
 
     private Point lastDragPoint; // 记录上一次拖拽的点
 
     // 缩放限制
-    private static final int MIN_SCALE_FACTOR = 5;
-    private static final int MAX_SCALE_FACTOR = 50;
+    private static final int MIN_SCALE_FACTOR = 1;
+    private static final int MAX_SCALE_FACTOR = 150;
     private static final float ZOOM_STEP = 1.2f; // 每次缩放的比例因子
 
     @Getter
@@ -113,11 +112,11 @@ public class GraphicFrame extends JFrame implements Refreshable {
             Point mousePos = e.getPoint();
 
             // 计算缩放前的世界坐标位置（鼠标指向的实际位置）
-            double worldXBefore = (mousePos.x - xOffset) / (double) scaleFactor;
-            double worldYBefore = (mousePos.y - yOffset) / (double) scaleFactor;
+            double worldXBefore = (mousePos.x - xOffset) / scaleFactor;
+            double worldYBefore = (mousePos.y - yOffset) / scaleFactor;
 
             // 更新缩放因子
-            int newScaleFactor = (int) (scaleFactor * zoomFactor);
+            double newScaleFactor = scaleFactor * zoomFactor;
             if (newScaleFactor >= MIN_SCALE_FACTOR && newScaleFactor <= MAX_SCALE_FACTOR) {
                 scaleFactor = newScaleFactor;
 
@@ -129,8 +128,10 @@ public class GraphicFrame extends JFrame implements Refreshable {
     }
 
     public void removeGraphic(com.game.physicsandbox.object.Component component) {
-        List<Circle> removed = circles.stream().filter(circle -> circle.getCreator() == component).toList();
-        circles.removeAll(removed);
+        List<Circle> removedCircle = circles.stream().filter(circle -> circle.getCreator() == component).toList();
+        List<Line> removedLine = lines.stream().filter(line -> line.getCreator() == component).toList();
+        circles.removeAll(removedCircle);
+        lines.removeAll(removedLine);
     }
 
     public void addCircle(Circle circle) {
@@ -139,26 +140,10 @@ public class GraphicFrame extends JFrame implements Refreshable {
         }
     }
 
-    public void removeCircle(Circle circle) {
-        circles.remove(circle);
-    }
-
-    public void clearCircles() {
-        circles.clear();
-    }
-
     public void addLine(Line line) {
         if (!lines.contains(line)) {
             lines.add(line);
         }
-    }
-
-    public void removeLine(Line line) {
-        lines.remove(line);
-    }
-
-    public void clearLines() {
-        lines.clear();
     }
 
     public void refresh() {
@@ -205,7 +190,7 @@ public class GraphicFrame extends JFrame implements Refreshable {
     /**
      * 获取当前缩放比例（用于显示）
      */
-    public float getZoomLevel() {
+    public double getZoomLevel() {
         return scaleFactor / 15.0f;
     }
 
@@ -243,6 +228,10 @@ public class GraphicFrame extends JFrame implements Refreshable {
             // 绘制所有圆
             for (Circle circle : snapshot) {
                 drawCircle(g2d, circle);
+            }
+
+            for (Line line : lines) {
+                drawLine(g2d, line);
             }
         }
 
@@ -317,6 +306,7 @@ public class GraphicFrame extends JFrame implements Refreshable {
             int y = circle.getCenterY(scaleFactor, yOffset) - circle.getRadius(scaleFactor);
             int diameter = circle.getRadius(scaleFactor) * 2;
 
+            Color oldColor = g2d.getColor();
             // 设置颜色
             g2d.setColor(circle.getColor());
 
@@ -327,6 +317,16 @@ public class GraphicFrame extends JFrame implements Refreshable {
                 // 绘制空心圆
                 g2d.drawOval(x, y, diameter, diameter);
             }
+            g2d.setColor(oldColor);
+        }
+
+        private void drawLine(Graphics2D g2d, Line line) {
+            int startX = line.getStartX(scaleFactor, xOffset);
+            int startY = line.getStartY(scaleFactor, yOffset);
+            int endX = line.getEndX(scaleFactor, xOffset);
+            int endY = line.getEndY(scaleFactor, yOffset);
+            g2d.setColor(line.getColor());
+            g2d.drawLine(startX, startY, endX, endY);
         }
     }
 

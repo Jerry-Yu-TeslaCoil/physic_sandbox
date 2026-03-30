@@ -11,7 +11,7 @@ import java.awt.*;
 @Getter
 public class CenterCircle extends Circle {
     private Transform transform = new Transform();
-    private double radius = 0.3;
+    private double radius = 2;
 
     private Color color = Color.BLACK;
 
@@ -32,6 +32,6 @@ public class CenterCircle extends Circle {
 
     @Override
     public int getRadius(double scaledFactor) {
-        return (int) (radius * scaledFactor);
+        return (int) (radius);
     }
 }
