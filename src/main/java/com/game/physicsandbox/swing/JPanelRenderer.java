@@ -25,8 +25,6 @@ public class JPanelRenderer extends com.game.physicsandbox.object.Component {
 
     private final List<Line> lines = new ArrayList<>();
 
-    private int delayCounter;
-
     // 定义不同状态的颜色
     private static final Color TRIGGERED_COLOR = Color.RED;      // trigger为true时的颜色
     private static final Color NON_TRIGGERED_COLOR = Color.BLACK;  // trigger为false时的颜色

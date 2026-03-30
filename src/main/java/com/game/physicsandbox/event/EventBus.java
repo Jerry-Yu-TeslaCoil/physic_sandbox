@@ -3,6 +3,7 @@ package com.game.physicsandbox.event;
 import com.game.physicsandbox.mechanism.ComponentExecutor;
 import com.game.physicsandbox.object.Component;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +23,13 @@ public class EventBus extends ComponentExecutor {
 
     // 事件存储队列，按时间戳排序
     private final List<Event> eventQueue = new ArrayList<>();
+
+    private final EventRegistry eventRegistry;
+
+    @Autowired
+    public EventBus(EventRegistry eventRegistry) {
+        this.eventRegistry = eventRegistry;
+    }
 
     /**
      * 发布事件（自动添加当前时间戳）
@@ -70,6 +78,7 @@ public class EventBus extends ComponentExecutor {
         // 分发事件
         for (Event event : eventsToDispatch) {
             dispatchEvent(event);
+            eventRegistry.recycle(event);
         }
 
         super.update(currentTime, deltaTime);

@@ -3,16 +3,13 @@ package com.game.physicsandbox.physics.component;
 import com.game.physicsandbox.event.Event;
 import com.game.physicsandbox.physics.Collider;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class CollideEvent extends Event {
-    private final Collider colliderA;
-    private final Collider colliderB;
-
-    public CollideEvent(Collider colliderA, Collider colliderB) {
-        this.colliderA = colliderA;
-        this.colliderB = colliderB;
-    }
+    private Collider colliderA;
+    private Collider colliderB;
 
     @Override
     public String toString() {

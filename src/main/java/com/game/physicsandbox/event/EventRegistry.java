@@ -1,6 +1,7 @@
 package com.game.physicsandbox.event;
 
 import com.game.physicsandbox.exception.EventNotRegisteredException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.function.Supplier;
  * @author Jerry-Yu-TeslaCoil
  * @version 1.0
  */
+@Slf4j
 @Component
 public class EventRegistry {
     private final Map<Class<? extends Event>, EventPool<? extends Event>> eventPool = new ConcurrentHashMap<>();

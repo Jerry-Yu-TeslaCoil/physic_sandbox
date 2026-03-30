@@ -1,6 +1,7 @@
 package com.game.physicsandbox.physics.component;
 
 import com.game.physicsandbox.event.EventBus;
+import com.game.physicsandbox.event.EventRegistry;
 import com.game.physicsandbox.mechanism.UpdateLayer;
 import com.game.physicsandbox.mechanism.UpdateStage;
 import com.game.physicsandbox.object.component.Transform;
@@ -33,15 +34,17 @@ public class ColliderConstraint extends Constraint {
     RigidBody rigidBodyB;
 
     private final EventBus eventBus;
+    private final EventRegistry eventRegistry;
 
     private boolean collided = false;
 
     public ColliderConstraint(Collider colliderA, Collider colliderB, ColliderConstraintIndex pair,
-                              EventBus eventBus) {
+                              EventBus eventBus, EventRegistry eventRegistry) {
         this.colliderA = colliderA;
         this.colliderB = colliderB;
         this.pair = pair;
         this.eventBus = eventBus;
+        this.eventRegistry = eventRegistry;
         rigidBodyA = colliderA.getGameObject().getComponent(RigidBody.class);
         rigidBodyB = colliderB.getGameObject().getComponent(RigidBody.class);
     }
@@ -100,7 +103,10 @@ public class ColliderConstraint extends Constraint {
         accelerationA = Vector2.zero();
         accelerationB = Vector2.zero();
         if (collided) {
-            eventBus.publish(new CollideEvent(colliderA, colliderB));
+            CollideEvent collideEvent = eventRegistry.get(CollideEvent.class);
+            collideEvent.setColliderA(colliderA);
+            collideEvent.setColliderB(colliderB);
+            eventBus.publish(collideEvent);
         }
         collided = false;
 

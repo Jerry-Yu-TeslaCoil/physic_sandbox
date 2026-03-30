@@ -1,7 +1,9 @@
 package com.game.physicsandbox.physics;
 
 import com.game.physicsandbox.event.EventBus;
+import com.game.physicsandbox.event.EventRegistry;
 import com.game.physicsandbox.mechanism.ComponentExecutor;
+import com.game.physicsandbox.physics.component.CollideEvent;
 import com.game.physicsandbox.physics.component.ColliderConstraint;
 import com.game.physicsandbox.physics.component.ColliderConstraintIndex;
 import com.game.physicsandbox.util.Vector2;
@@ -26,10 +28,13 @@ public class ColliderAnalyzer extends ComponentExecutor {
     private final List<ColliderConstraint> constraintRecord  = new ArrayList<>();
 
     private final EventBus eventBus;
+    private final EventRegistry eventRegistry;
 
     @Autowired
-    public ColliderAnalyzer(EventBus eventBus) {
+    public ColliderAnalyzer(EventBus eventBus, EventRegistry eventRegistry) {
         this.eventBus = eventBus;
+        this.eventRegistry = eventRegistry;
+        eventRegistry.register(CollideEvent.class, CollideEvent::new, 100);
     }
 
     public List<ColliderConstraint> getConstraintRecord() {
@@ -81,7 +86,7 @@ public class ColliderAnalyzer extends ComponentExecutor {
                             ColliderConstraintIndex pair = new ColliderConstraintIndex();
                             pair.setAutoDispose(true);
                             ColliderConstraint constraint =
-                                    new ColliderConstraint(entry.getValue(), other.getValue(), pair, eventBus);
+                                    new ColliderConstraint(entry.getValue(), other.getValue(), pair, eventBus, eventRegistry);
                             pair.setPair(constraint);
                             constraint.setAutoDispose(true);
                             if (!constraintRecord.contains(constraint)) {
