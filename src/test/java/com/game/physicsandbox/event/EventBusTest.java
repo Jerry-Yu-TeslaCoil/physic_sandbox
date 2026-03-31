@@ -6,7 +6,7 @@ public class EventBusTest {
     private final EventBus eventBus;
 
     public EventBusTest() {
-        eventBus = new EventBus();
+        eventBus = new EventBus(null);
     }
 
     @Test

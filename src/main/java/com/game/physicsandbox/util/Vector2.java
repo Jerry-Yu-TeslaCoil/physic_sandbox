@@ -1,5 +1,7 @@
 package com.game.physicsandbox.util;
 
+import java.util.Random;
+
 /**
  * 二维向量记录类，提供基本的向量运算功能。
  * <p>
@@ -89,7 +91,8 @@ public record Vector2(double x, double y) {
 
         double maxAbs = Math.max(Math.abs(x), Math.abs(y));
         if (maxAbs < ZERO_DELTA) {
-            throw new ArithmeticException("Cannot normalize " + this);
+            Random random = new Random(System.currentTimeMillis());
+            return new Vector2(random.nextDouble(), random.nextDouble()).normalize();
         }
 
         double scale_factor = 1.0 / maxAbs;
