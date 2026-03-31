@@ -53,6 +53,8 @@ public class ColliderConstraint extends Constraint {
     @Override
     public void update(long currentTime, long deltaTime) {
         double delta = 1e-1;
+        double positionApplicationRate = 1;
+        double velocityApplicationRate = 1;
         if (rigidBodyA == null || rigidBodyB == null) {
             return;
         }
@@ -78,12 +80,12 @@ public class ColliderConstraint extends Constraint {
             double differA = differ * (massB / (massA + massB));
             double differB = differ * (massA / (massA + massB));
             if (!rigidBodyA.isKinematic()) {
-                accelerationA = newVelocityA.mul(1e9 / deltaTime);
-                transformA.setPosition(transformA.getPosition().add(vectorA2B.negate().mul(differA)), Transform.PositionSetStrategy.CLEAN_SPEED);
+                accelerationA = newVelocityA.mul(1e9 / deltaTime).mul(velocityApplicationRate);
+                transformA.setPosition(transformA.getPosition().add(vectorA2B.negate().mul(differA).mul(positionApplicationRate)), Transform.PositionSetStrategy.CLEAN_SPEED);
             }
             if (!rigidBodyB.isKinematic()) {
-                accelerationB = newVelocityB.mul(1e9 / deltaTime);
-                transformB.setPosition(transformB.getPosition().add(vectorA2B.mul(differB)), Transform.PositionSetStrategy.CLEAN_SPEED);
+                accelerationB = newVelocityB.mul(1e9 / deltaTime).mul(velocityApplicationRate);
+                transformB.setPosition(transformB.getPosition().add(vectorA2B.mul(differB).mul(positionApplicationRate)), Transform.PositionSetStrategy.CLEAN_SPEED);
             }
         }
     }
