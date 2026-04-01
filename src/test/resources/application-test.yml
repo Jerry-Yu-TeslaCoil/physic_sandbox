@@ -1,3 +1,3 @@
 settings:
   physics:
-    calculate_frames_per_second: 480
+    calculate_frames_per_second: 8

@@ -18,6 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.Random;
+
 public class TestMultipleColliders {
 
     @Test
@@ -31,9 +33,11 @@ public class TestMultipleColliders {
         GraphicFrame frame = context.getBean(GraphicFrame.class);
         FrameManager frameManager = context.getBean(FrameManager.class);
 
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 28; i++) {
             GameObject object = factory.create("Object" + i);
             object.getTransform().setPosition(new Vector2(((double) (i / 5) - 2.5) * 8, (i % 5 - 2.5) * 8));
+            Random rand = new Random();
+            object.getTransform().addAcceleration(new Vector2(rand.nextDouble(), rand.nextDouble()).mul(rand.nextDouble(5)));
             object.addComponent(new RoundCollider(2));
             object.addComponent(new RigidBody());
             object.addComponent(frame.createPanelRenderer());

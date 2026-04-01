@@ -52,7 +52,7 @@ public class ColliderConstraint extends Constraint {
 
     @Override
     public void update(long currentTime, long deltaTime) {
-        double delta = 1e-1;
+        double delta = 1e-3;
         double positionApplicationRate = 1;
         double velocityApplicationRate = 1;
         if (rigidBodyA == null || rigidBodyB == null) {
@@ -72,8 +72,8 @@ public class ColliderConstraint extends Constraint {
             collided = true;
             colliderA.setTriggered(true);
             colliderB.setTriggered(true);
-            Vector2 velocityA = transformA.getVelocity();
-            Vector2 velocityB = transformB.getVelocity();
+            Vector2 velocityA = transformA.getVelocity().projectionOnto(vectorA2B);
+            Vector2 velocityB = transformB.getVelocity().projectionOnto(vectorA2B);
             Vector2 newVelocityA = velocityA.mul((massA - massB) / sum).add(velocityB.mul(2 * massB / sum));
             Vector2 newVelocityB = velocityA.mul(2 * massA / sum).add(velocityB.mul((massB - massA) / sum));
 

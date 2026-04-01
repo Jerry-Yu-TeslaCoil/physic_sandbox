@@ -69,7 +69,7 @@ public class ColliderAnalyzer extends ComponentExecutor {
 
         Boundary boundary = getMaxBoundary(positionList, minX, minY, maxX, maxY);
 
-        double DETECT_ARG = 4.0;
+        double DETECT_ARG = 2.0;
         double delta = maxDetectionRadius * DETECT_ARG;
 
         ExtractedMap extractedMap = getExtractedMap(positionList, boundary, delta);
